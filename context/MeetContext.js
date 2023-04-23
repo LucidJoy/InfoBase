@@ -1,20 +1,26 @@
 import React, { createContext, useState, useEffect } from "react";
 import Web3 from "web3";
-import meetSciNFTAbi from "./MeetSciNFT.json"
+import meetSciNFT from "./MeetSciNFT.json";
+import meetSci from "./MeetSci.json";
+import acl from "./ACL.json";
+import tokenDeployer from "./TokenDeployer.json";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 
+
 const CreateMeetContext = createContext({});
 
-const meetSciContractAddress = "";
+const meetSciContractAddress = "0xE755E7E7e73B3eec0a0CcF7B4E2FDC5F237024e5";
 const nftContractAddress = "0xE65a35704e6DdF2b93caBBa149F917694B4d4dC0";
-const accessListContractAddress = "";
+const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
+const tokenDeployerAddress = "0xb88b3a36B04622ca36E877F455D88784c8F07708"
 
-const meetSciAbi = "";
-const nftAbi = meetSciNFTAbi.abi;
-const accessListAbi = "";
+const meetSciAbi = meetSci.abi;
+const nftAbi = meetSciNFT.abi;
+const accessListAbi = acl.abi;
 const tokenAbi = "";
+const tokenDeployerAbi = tokenDeployer.abi;
 
 export const CreateMeetProvider = ({ children }) => {
   const [address, setAddress] = useState("");
@@ -22,6 +28,12 @@ export const CreateMeetProvider = ({ children }) => {
   const [isModal, setIsModal] = useState(false);
   const [authentication, setAuthentication] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [form, setForm] = useState({
+    alias: "",
+    department: "",
+    tokenSymbol: "",
+    maxSupply: "",
+  });
 
   const router = useRouter();
 
@@ -122,50 +134,50 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
-    // check nft balance
-    const checkNftBalance = async (_currentUser) => {
-      if (window.ethereum) {
-        const web3Modal = new Web3Modal();
-        const connection = await web3Modal.connect();
-        const provider = new ethers.providers.Web3Provider(connection);
-        const signer = provider.getSigner();
-  
-        const contract = new ethers.Contract(
-          nftContractAddress,
-          nftAbi,
-          provider
-        );
-          
-        console.log(address);
-        const txRes = await contract.balanceOf(_currentUser);
-  
-        if (txRes > 0) {
-          return true;
-        }
-  
-        console.log(txRes);
-        return false;
+  // check nft balance
+  const checkNftBalance = async (_currentUser) => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        nftContractAddress,
+        nftAbi,
+        provider
+      );
+
+      console.log(address);
+      const txRes = await contract.balanceOf(_currentUser);
+
+      if (txRes > 0) {
+        return true;
       }
-    };
-  
-    useEffect(() => {
-      (async () => {
-        if (ethereum.isConnected()) {
+
+      console.log(txRes);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (ethereum.isConnected()) {
         const accounts = await window.ethereum.request({
           method: "eth_accounts",
         });
         console.log(accounts[0]);
         const res = await checkNftBalance(accounts[0]);
-        setAuthentication(true)
+        setAuthentication(true);
       }
     })();
-    }, []);
+  }, []);
 
-    useEffect(() => {
-      if (authentication == true) {
-        router.push("explore")
-      }
-    })
+  // useEffect(() => {
+  //   if (authentication == true) {
+  //     router.push("explore")
+  //   }
+  // })
 
   const mintNFT = async (receiver) => {
     if (window.ethereum) {
@@ -185,22 +197,94 @@ export const CreateMeetProvider = ({ children }) => {
       console.log(txRes);
     }
   };
-  const [form, setForm] = useState({
-    alias: "",
-    department: "",
-    tokenSymbol: "",
-    maxSupply: "",
-  });
+
+  // Deploy token contract
+  const deployToken = async ({alias, department, maxSupply, tokenSymbol}) => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        tokenDeployerAddress,
+        tokenDeployerAbi,
+        signer
+      );
+
+      const txRes = await contract.createToken(
+        alias, tokenSymbol, maxSupply,
+        {
+          gasLimit: 500000000,
+        }
+      );
+
+      await txRes.wait(1);
+
+      const addressArr = await contract.getAllTokenAddresses();
+      
+      let recentToken = addressArr[addressArr.length - 1]
+      console.log(recentToken);
+      return recentToken;
+    }
+  };
+
+  // 1. Add profile and NFT mint
+  const addResearcher = async ({alias, department, maxSupply, tokenSymbol}, tokenAddress) => {
+    let researcherAddress;
+    if (window.ethereum) {
+      if (ethereum.isConnected()) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        console.log(accounts[0]);
+        researcherAddress = accounts[0];
+      }
+
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        signer
+      );
+
+      const txRes = await contract.addProfile(
+        researcherAddress, 
+        alias,
+        tokenSymbol,
+        department,
+        tokenAddress,
+        maxSupply,
+        {
+          gasLimit: 500000000,
+        }
+      );
+
+      await txRes.wait(1);
+
+      console.log(txRes);
+      return txRes;
+    }
+  };
 
   return (
     <CreateMeetContext.Provider
-      value={{ authentication, mintNFT,
+      value={{
+        authentication,
+        mintNFT,
         address,
         setAddress,
         toggleModal,
-        setToggleModal, connectWallet,
+        setToggleModal,
+        connectWallet,
         form,
         setForm,
+        addResearcher,
+        deployToken
       }}
     >
       {children}
