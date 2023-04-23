@@ -8,24 +8,10 @@ import { Hero } from "@/sections";
 import CreateMeetContext from "@/context/MeetContext";
 import { shortenAddress } from "@/utils/shortenAddr";
 
+
 export default function Home() {
-  const { address, setAddress, toggleModal, setToggleModal } =
+  const { address, setAddress, toggleModal, setToggleModal, connectWallet } =
     useContext(CreateMeetContext);
-
-  const handleConnect = async () => {
-    if (!window.ethereum) {
-      alert("Please install metamask!");
-      return;
-    }
-
-    const web3 = new Web3(window.ethereum);
-
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-
-    const accounts = await web3.eth.getAccounts();
-    const address = accounts[0];
-    setAddress(address);
-  };
 
   return (
     <>
@@ -45,12 +31,12 @@ export default function Home() {
 
         <div className='h-[100vh] px-[20px]'>
           <div className='absolute right-[20px] top-[20px]'>
-            {address !== null ? (
+            {address !== "" ? (
               <p className='text-white'>{shortenAddress(address)}</p>
             ) : (
               <button
                 className='btn btn-outline border-[2px] px-[30px] text-[14px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d]'
-                onClick={() => handleConnect()}
+                onClick={() => connectWallet()}
               >
                 connect wallet
               </button>

@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 import CreateMeetContext from "@/context/MeetContext";
 
 const Modal = () => {
-  const { setToggleModal } = useContext(CreateMeetContext);
+  const { setToggleModal, mintNFT, address } = useContext(CreateMeetContext);
+
+  const handleMint = async (address) => {
+    const res = await mintNFT(address);
+  }
 
   const router = useRouter();
 
@@ -50,7 +54,10 @@ const Modal = () => {
 
         <p
           className='text-[#767679] text-[14px] hover:text-[#9f9fa1] cursor-pointer transition-all duration-100 ease-in-out'
-          onClick={() => router.push("explore")}
+          onClick={() => {
+            handleMint(address);
+            router.push("explore")
+          }}
         >
           Continue as Scholar <span className='arrow'>&rarr;</span>
         </p>
