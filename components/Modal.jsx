@@ -1,12 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import CreateMeetContext from "@/context/MeetContext";
 
 const Modal = () => {
-  const { setToggleModal } = useContext(CreateMeetContext);
+  const { setToggleModal, form, setForm } = useContext(CreateMeetContext);
 
   const router = useRouter();
+
+  useEffect(() => {
+    console.log("🛵 ", form);
+  }, [form]);
 
   return (
     <div className='w-[500px] h-[400px] bg-[#1a1a1d] border border-[#313134] rounded-[20px] text-white flex flex-col items-start justify-between z-30 p-[20px] relative'>
@@ -31,16 +35,50 @@ const Modal = () => {
       </button>
 
       <div className='flex flex-col gap-[4px]'>
-        <p className='font-semibold text-[18px] text-[#c3073f]'>Alias:</p>
-        <p className='font-semibold text-[18px] text-[#c3073f]'>Department:</p>
-        <p className='font-semibold text-[18px] text-[#c3073f]'>
-          Token Symbol:
+        <p className='font-semibold text-[18px] text-[#c3073f] flex items-center gap-[8px]'>
+          Alias:
+          <input
+            type='text'
+            id='alias'
+            placeholder='Enter alias'
+            className='w-[300px] px-[10px] py-[5px] rounded-[5px] outline-none bg-[#1a1a1d] text-white font-normal text-[16px] placeholder:text-[#ffffff48]'
+            onChange={(e) => setForm({ ...form, alias: e.target.value })}
+          />
         </p>
-        <p className='font-semibold text-[18px] text-[#c3073f]'>Max Supply:</p>
+        <p className='font-semibold text-[18px] text-[#c3073f] flex items-center gap-[8px]'>
+          Department:
+          <input
+            type='text'
+            id='department'
+            placeholder='Enter department'
+            className='w-[300px] px-[10px] py-[5px] rounded-[5px] outline-none bg-[#1a1a1d] text-white font-normal text-[16px] placeholder:text-[#ffffff48]'
+            onChange={(e) => setForm({ ...form, department: e.target.value })}
+          />
+        </p>
+        <p className='font-semibold text-[18px] text-[#c3073f] flex items-center gap-[8px]'>
+          Token Symbol:
+          <input
+            type='text'
+            id='symbol'
+            placeholder='Enter token symbol'
+            className='w-[300px] px-[10px] py-[5px] rounded-[5px] outline-none bg-[#1a1a1d] text-white font-normal text-[16px] placeholder:text-[#ffffff48]'
+            onChange={(e) => setForm({ ...form, tokenSymbol: e.target.value })}
+          />
+        </p>
+        <p className='font-semibold text-[18px] text-[#c3073f] flex items-center gap-[8px]'>
+          Max Supply:
+          <input
+            type='number'
+            id='supply'
+            placeholder='Enter max supply'
+            className='w-[300px] px-[10px] py-[5px] rounded-[5px] outline-none bg-[#1a1a1d] text-white font-normal text-[16px] placeholder:text-[#ffffff48]'
+            onChange={(e) => setForm({ ...form, maxSupply: e.target.value })}
+          />
+        </p>
       </div>
 
       <div className='flex items-center justify-center w-full'>
-        <button className='btn bg-[#c3073f] text-[#1a1a1d] text-[15px] px-[50px] hover:bg-[#b00639] -mt-[20px]'>
+        <button className='btn bg-[#c3073f] text-[#1a1a1d] text-[15px] px-[50px] hover:bg-[#b00639] -mt-[0px]'>
           Create
         </button>
       </div>
