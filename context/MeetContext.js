@@ -27,6 +27,7 @@ export const CreateMeetProvider = ({ children }) => {
   const [toggleModal, setToggleModal] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [authentication, setAuthentication] = useState(false);
+  const [exploreResearchers, setExploreResearchers] = useState([]);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [form, setForm] = useState({
     alias: "",
@@ -270,6 +271,39 @@ export const CreateMeetProvider = ({ children }) => {
       return txRes;
     }
   };
+  
+  // 2. Get explore profiles
+  const getExploreResearchers = async () => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        provider
+      );
+
+      const txRes = await contract.getExploreProfiles();
+
+      console.log(txRes);
+      return txRes;
+    }
+  };
+
+  useEffect(() => {
+    (
+      async () => {
+        const res = await getExploreResearchers();
+        console.log(res);
+        setExploreResearchers(res);
+      }
+    )();
+
+  }, [])
+  
 
   return (
     <CreateMeetContext.Provider
@@ -284,7 +318,8 @@ export const CreateMeetProvider = ({ children }) => {
         form,
         setForm,
         addResearcher,
-        deployToken
+        deployToken,
+        exploreResearchers
       }}
     >
       {children}
