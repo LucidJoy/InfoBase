@@ -1,10 +1,32 @@
+import React, { useContext } from "react";
 import Head from "next/head";
 import Image from "next/image";
+import Web3 from "web3";
 
-import { Navbar } from "@/components";
+import { Modal } from "@/components";
 import { Hero } from "@/sections";
+import CreateMeetContext from "@/context/MeetContext";
+import { shortenAddress } from "@/utils/shortenAddr";
 
 export default function Home() {
+  const { address, setAddress, toggleModal, setToggleModal } =
+    useContext(CreateMeetContext);
+
+  const handleConnect = async () => {
+    if (!window.ethereum) {
+      alert("Please install metamask!");
+      return;
+    }
+
+    const web3 = new Web3(window.ethereum);
+
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+
+    const accounts = await web3.eth.getAccounts();
+    const address = accounts[0];
+    setAddress(address);
+  };
+
   return (
     <>
       <Head>
@@ -15,9 +37,30 @@ export default function Home() {
       </Head>
 
       <main>
-        <Navbar />
+        {toggleModal && (
+          <div className='fixed z-50 top-0 bottom-0 left-0 right-0 w-[100vw] h-[100vh] flex items-center justify-center bg-gray-600 bg-opacity-10 backdrop-filter backdrop-blur-lg'>
+            <Modal />
+          </div>
+        )}
 
-        <div className='nav-h px-[20px]'>
+        <div className='h-[100vh] px-[20px]'>
+          <div className='absolute right-[20px] top-[20px]'>
+            {address !== null ? (
+              <p className='text-white'>{shortenAddress(address)}</p>
+            ) : (
+              <button
+                className='btn btn-outline border-[2px] px-[30px] text-[14px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d]'
+                onClick={() => handleConnect()}
+              >
+                connect wallet
+              </button>
+            )}
+          </div>
+
+          <div className='flex items-center justify-center font-semibold pt-[100px] text-[40px] text-transparent bg-clip-text bg-gradient-to-br from-[#C3073F] to-[#950740]'>
+            MeetSci
+          </div>
+
           <Hero />
         </div>
       </main>

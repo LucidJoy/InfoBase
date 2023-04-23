@@ -9,7 +9,7 @@ const explore = () => {
     <div>
       <Navbar explore />
 
-      <div className='px-[20px] pb-[20px]'>
+      <div className='px-[40px] pb-[20px]'>
         <div className='flex flex-col pt-[20px]'>
           <p className='text-[#c3073f] text-[25px] mb-[20px] font-medium'>
             Researchers

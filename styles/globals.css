@@ -22,3 +22,13 @@ body {
   backdrop-filter: blur(80px);
   -webkit-backdrop-filter: blur(80px);
 }
+
+.arrow {
+  display: inline-block;
+  color: #767679;
+  transition: transform 0.2s ease-in-out;
+}
+p:hover .arrow {
+  transform: translateX(5px);
+  color: #9f9fa1;
+}

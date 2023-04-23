@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
 import { pattern } from "@/assets";
+import CreateMeetContext from "@/context/MeetContext";
 
 const Card = ({ btnName }) => {
   const router = useRouter();
+  const { toggleModal, setToggleModal } = useContext(CreateMeetContext);
 
   let scholar = btnName.split(" ").includes("Scholar");
 
@@ -25,9 +27,13 @@ const Card = ({ btnName }) => {
       {!scholar && (
         <button
           className='btn bg-[#C3073F] hover:bg-[#b00639] text-black font-semibold text-[15px] px-[30px] z-10'
-          onClick={() => router.push("marketplace")}
+          onClick={() => {
+            // router.push("explore");
+            setToggleModal(true);
+            console.log(toggleModal);
+          }}
         >
-          MINT
+          Register
         </button>
       )}
 
