@@ -185,10 +185,23 @@ export const CreateMeetProvider = ({ children }) => {
       console.log(txRes);
     }
   };
+  const [form, setForm] = useState({
+    alias: "",
+    department: "",
+    tokenSymbol: "",
+    maxSupply: "",
+  });
 
   return (
     <CreateMeetContext.Provider
-      value={{ authentication, mintNFT, address, setAddress, toggleModal, setToggleModal, connectWallet }}
+      value={{ authentication, mintNFT,
+        address,
+        setAddress,
+        toggleModal,
+        setToggleModal, connectWallet,
+        form,
+        setForm,
+      }}
     >
       {children}
     </CreateMeetContext.Provider>
