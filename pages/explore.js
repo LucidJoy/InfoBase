@@ -11,9 +11,17 @@ const explore = () => {
 
       <div className='px-[40px] pb-[20px]'>
         <div className='flex flex-col pt-[20px]'>
-          <p className='text-[#c3073f] text-[25px] mb-[20px] font-medium'>
-            Researchers
-          </p>
+          <div className='flex flex-row justify-between items-center mb-[20px]'>
+            <p className='text-[#c3073f]  text-[25px] font-medium'>
+              Researchers
+            </p>
+
+            {/* <p className='text-white'>joy</p> */}
+
+            <button className='bottom-[10px] text-[#747477] border-2 px-[20px] py-[5px] rounded-[8px] border-[#c3073f] text-[15px] hover:scale-110 hover:bg-[#c3073f] hover:text-[#1a1a1d] transition-all duration-150 ease-in-out font-medium'>
+              Add Work +
+            </button>
+          </div>
 
           <div className='flex relative flex-col items-center justify-center w-[250px] h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]'>
             <div className='absolute right-[20px] top-[20px] border border-gray-700 glassmorphism cursor-pointer z-[20] p-[10px] rounded-[10px]'>

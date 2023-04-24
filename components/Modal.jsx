@@ -70,6 +70,7 @@ const Modal = () => {
           <input
             type='number'
             id='supply'
+            min={1}
             placeholder='Enter max supply'
             className='w-[300px] px-[10px] py-[5px] rounded-[5px] outline-none bg-[#1a1a1d] text-white font-normal text-[16px] placeholder:text-[#ffffff48]'
             onChange={(e) => setForm({ ...form, maxSupply: e.target.value })}
