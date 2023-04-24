@@ -4,7 +4,7 @@ import meetSciNFT from "./MeetSciNFT.json";
 import meetSci from "./MeetSci.json";
 import acl from "./ACL.json";
 import tokenDeployer from "./TokenDeployer.json";
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 
@@ -462,6 +462,16 @@ export const CreateMeetProvider = ({ children }) => {
       setExploreResearchPapers(response);
     })();
   }, [])
+
+  const convertNumToEther = () => {
+    const output = utils.parseEther("1");
+    console.log("Parse Ether: ", output);
+    console.log("Actual number: ", Number(output._hex));
+  }
+
+  // useEffect(()=> {
+  //   convertNumToEther();
+  // }, [])
 
   return (
     <CreateMeetContext.Provider
