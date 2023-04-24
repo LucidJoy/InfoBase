@@ -209,6 +209,7 @@ export const CreateMeetProvider = ({ children }) => {
       await txRes.wait();
 
       console.log(txRes);
+      return txRes;
     }
   };
 
