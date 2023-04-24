@@ -4,7 +4,19 @@ import { useRouter } from "next/router";
 import CreateMeetContext from "@/context/MeetContext";
 
 const Modal = () => {
-  const { setToggleModal, form, setForm } = useContext(CreateMeetContext);
+  const { setToggleModal, mintNFT, address, form, setForm, addResearcher, deployToken } = useContext(CreateMeetContext);
+
+  const handleMint = async (address) => {
+    const res = await mintNFT(address);
+  }
+
+  const handleCreateProfile = async (address) => {
+    const resToken = await deployToken(form);
+    console.log("Res: ", typeof(resToken));
+    const resProfile = await addResearcher(form, resToken, address);
+    console.log(resProfile);
+    router.push("explore");
+  }
 
   const router = useRouter();
 
@@ -79,7 +91,7 @@ const Modal = () => {
       </div>
 
       <div className='flex items-center justify-center w-full'>
-        <button className='btn bg-[#c3073f] text-[#1a1a1d] text-[15px] px-[50px] hover:bg-[#b00639] -mt-[0px]'>
+        <button className='btn bg-[#c3073f] text-[#1a1a1d] text-[15px] px-[50px] hover:bg-[#b00639] -mt-[0px]' onClick={() => handleCreateProfile()}>
           Create
         </button>
       </div>
@@ -89,7 +101,10 @@ const Modal = () => {
 
         <p
           className='text-[#767679] text-[14px] hover:text-[#9f9fa1] cursor-pointer transition-all duration-100 ease-in-out'
-          onClick={() => router.push("explore")}
+          onClick={() => {
+            handleMint(address);
+            router.push("explore")
+          }}
         >
           Continue as Scholar <span className='arrow'>&rarr;</span>
         </p>
