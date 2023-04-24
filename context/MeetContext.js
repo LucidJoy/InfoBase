@@ -56,11 +56,11 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      await checkIfWalletIsConnected();
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     await checkIfWalletIsConnected();
+  //   })();
+  // }, []);
 
   const connectWallet = async () => {
     if (!window.ethereum) return alert("Please install MetaMask.");
@@ -178,7 +178,8 @@ export const CreateMeetProvider = ({ children }) => {
   //   if (authentication == true) {
   //     router.push("explore")
   //   }
-  // })
+  //   console.log("Authenticated: ", authentication);
+  // }, [])
 
   const mintNFT = async (receiver) => {
     if (window.ethereum) {
@@ -301,8 +302,33 @@ export const CreateMeetProvider = ({ children }) => {
         setExploreResearchers(res);
       }
     )();
+  }, []);
 
-  }, [])
+    // 4. Vote to ID
+    const vote = async (researchPaperId) => {
+      if (window.ethereum) {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+  
+        const contract = new ethers.Contract(
+          meetSciContractAddress,
+          meetSciAbi,
+          signer
+        );
+  
+        const txRes = await contract.voteToId(researchPaperId, {
+          gasLimit: 500000000,
+        });
+  
+        setLoading(true);
+        await txRes.wait(1);
+        setLoading(false);
+  
+        console.log(txRes);
+      }
+    };
   
 
   return (
@@ -319,7 +345,8 @@ export const CreateMeetProvider = ({ children }) => {
         setForm,
         addResearcher,
         deployToken,
-        exploreResearchers
+        exploreResearchers,
+        vote
       }}
     >
       {children}

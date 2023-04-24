@@ -7,6 +7,11 @@ import CreateMeetContext from "@/context/MeetContext";
 
 const explore = () => {
   const { exploreResearchers } = useContext(CreateMeetContext);
+
+  const handleVote = async () => {
+    
+  }
+
   return (
     <div>
       <Navbar explore />
@@ -20,7 +25,7 @@ const explore = () => {
             {exploreResearchers.map(() => {
               return (
                 <div className="flex relative flex-col items-center justify-center w-[250px] h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]">
-                  <div className="absolute right-[20px] top-[20px] border border-gray-700 glassmorphism cursor-pointer z-[20] p-[10px] rounded-[10px]">
+                  <div className="absolute right-[20px] top-[20px] border border-gray-700 glassmorphism cursor-pointer z-[20] p-[10px] rounded-[10px]" onClick={() => handleVote()}>
                     <Image src={arr_up} width={20} height={20} />
                   </div>
 
