@@ -8,13 +8,12 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 
-
 const CreateMeetContext = createContext({});
 
 const meetSciContractAddress = "0xE755E7E7e73B3eec0a0CcF7B4E2FDC5F237024e5";
 const nftContractAddress = "0xE65a35704e6DdF2b93caBBa149F917694B4d4dC0";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
-const tokenDeployerAddress = "0xb88b3a36B04622ca36E877F455D88784c8F07708"
+const tokenDeployerAddress = "0xb88b3a36B04622ca36E877F455D88784c8F07708";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
@@ -25,6 +24,7 @@ const tokenDeployerAbi = tokenDeployer.abi;
 export const CreateMeetProvider = ({ children }) => {
   const [address, setAddress] = useState("");
   const [toggleModal, setToggleModal] = useState(false);
+  const [toggleAddworkModal, setToggleAddworkModal] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [authentication, setAuthentication] = useState(false);
   const [exploreResearchers, setExploreResearchers] = useState([]);
@@ -34,6 +34,12 @@ export const CreateMeetProvider = ({ children }) => {
     department: "",
     tokenSymbol: "",
     maxSupply: "",
+  });
+  const [workForm, setWorkForm] = useState({
+    title: "",
+    description: "",
+    department: "",
+    uploadFile: "",
   });
 
   const router = useRouter();
@@ -200,7 +206,7 @@ export const CreateMeetProvider = ({ children }) => {
   };
 
   // Deploy token contract
-  const deployToken = async ({alias, department, maxSupply, tokenSymbol}) => {
+  const deployToken = async ({ alias, department, maxSupply, tokenSymbol }) => {
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
@@ -213,25 +219,25 @@ export const CreateMeetProvider = ({ children }) => {
         signer
       );
 
-      const txRes = await contract.createToken(
-        alias, tokenSymbol, maxSupply,
-        {
-          gasLimit: 500000000,
-        }
-      );
+      const txRes = await contract.createToken(alias, tokenSymbol, maxSupply, {
+        gasLimit: 500000000,
+      });
 
       await txRes.wait(1);
 
       const addressArr = await contract.getAllTokenAddresses();
-      
-      let recentToken = addressArr[addressArr.length - 1]
+
+      let recentToken = addressArr[addressArr.length - 1];
       console.log(recentToken);
       return recentToken;
     }
   };
 
   // 1. Add profile and NFT mint
-  const addResearcher = async ({alias, department, maxSupply, tokenSymbol}, tokenAddress) => {
+  const addResearcher = async (
+    { alias, department, maxSupply, tokenSymbol },
+    tokenAddress
+  ) => {
     let researcherAddress;
     if (window.ethereum) {
       if (ethereum.isConnected()) {
@@ -254,7 +260,7 @@ export const CreateMeetProvider = ({ children }) => {
       );
 
       const txRes = await contract.addProfile(
-        researcherAddress, 
+        researcherAddress,
         alias,
         tokenSymbol,
         department,
@@ -271,7 +277,7 @@ export const CreateMeetProvider = ({ children }) => {
       return txRes;
     }
   };
-  
+
   // 2. Get explore profiles
   const getExploreResearchers = async () => {
     if (window.ethereum) {
@@ -294,16 +300,12 @@ export const CreateMeetProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    (
-      async () => {
-        const res = await getExploreResearchers();
-        console.log(res);
-        setExploreResearchers(res);
-      }
-    )();
-
-  }, [])
-  
+    (async () => {
+      const res = await getExploreResearchers();
+      console.log(res);
+      setExploreResearchers(res);
+    })();
+  }, []);
 
   return (
     <CreateMeetContext.Provider
@@ -319,7 +321,11 @@ export const CreateMeetProvider = ({ children }) => {
         setForm,
         addResearcher,
         deployToken,
-        exploreResearchers
+        exploreResearchers,
+        toggleAddworkModal,
+        setToggleAddworkModal,
+        workForm,
+        setWorkForm,
       }}
     >
       {children}
