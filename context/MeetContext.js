@@ -8,13 +8,12 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 
-
 const CreateMeetContext = createContext({});
 
-const meetSciContractAddress = "0xE755E7E7e73B3eec0a0CcF7B4E2FDC5F237024e5";
+const meetSciContractAddress = "0x8cdba4cB129664CeD2a271a818BB7F94B0ff86da";
 const nftContractAddress = "0xE65a35704e6DdF2b93caBBa149F917694B4d4dC0";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
-const tokenDeployerAddress = "0xb88b3a36B04622ca36E877F455D88784c8F07708"
+const tokenDeployerAddress = "0xb88b3a36B04622ca36E877F455D88784c8F07708";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
@@ -25,15 +24,28 @@ const tokenDeployerAbi = tokenDeployer.abi;
 export const CreateMeetProvider = ({ children }) => {
   const [address, setAddress] = useState("");
   const [toggleModal, setToggleModal] = useState(false);
+  const [toggleAddworkModal, setToggleAddworkModal] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [authentication, setAuthentication] = useState(false);
   const [exploreResearchers, setExploreResearchers] = useState([]);
+  const [exploreResearchPapers, setExploreResearchPapers] = useState([]);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [form, setForm] = useState({
     alias: "",
     department: "",
     tokenSymbol: "",
     maxSupply: "",
+  });
+  const [workForm, setWorkForm] = useState({
+    title: "",
+    description: "",
+    department: "",
+    uploadFile: "",
+  });
+  const [currentProfile, setCurrentProfile] = useState({
+    researcherId: "",
+    researcherAddress: "",
+    tokenAddress: "",
   });
 
   const router = useRouter();
@@ -201,7 +213,7 @@ export const CreateMeetProvider = ({ children }) => {
   };
 
   // Deploy token contract
-  const deployToken = async ({alias, department, maxSupply, tokenSymbol}) => {
+  const deployToken = async ({ alias, department, maxSupply, tokenSymbol }) => {
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
@@ -214,25 +226,25 @@ export const CreateMeetProvider = ({ children }) => {
         signer
       );
 
-      const txRes = await contract.createToken(
-        alias, tokenSymbol, maxSupply,
-        {
-          gasLimit: 500000000,
-        }
-      );
+      const txRes = await contract.createToken(alias, tokenSymbol, maxSupply, {
+        gasLimit: 500000000,
+      });
 
       await txRes.wait(1);
 
       const addressArr = await contract.getAllTokenAddresses();
-      
-      let recentToken = addressArr[addressArr.length - 1]
+
+      let recentToken = addressArr[addressArr.length - 1];
       console.log(recentToken);
       return recentToken;
     }
   };
 
   // 1. Add profile and NFT mint
-  const addResearcher = async ({alias, department, maxSupply, tokenSymbol}, tokenAddress) => {
+  const addResearcher = async (
+    { alias, department, maxSupply, tokenSymbol },
+    tokenAddress
+  ) => {
     let researcherAddress;
     if (window.ethereum) {
       if (ethereum.isConnected()) {
@@ -255,7 +267,7 @@ export const CreateMeetProvider = ({ children }) => {
       );
 
       const txRes = await contract.addProfile(
-        researcherAddress, 
+        researcherAddress,
         alias,
         tokenSymbol,
         department,
@@ -272,7 +284,7 @@ export const CreateMeetProvider = ({ children }) => {
       return txRes;
     }
   };
-  
+
   // 2. Get explore profiles
   const getExploreResearchers = async () => {
     if (window.ethereum) {
@@ -295,41 +307,160 @@ export const CreateMeetProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    (
-      async () => {
-        const res = await getExploreResearchers();
-        console.log(res);
-        setExploreResearchers(res);
-      }
-    )();
+    (async () => {
+      const res = await getExploreResearchers();
+      console.log(res);
+      setExploreResearchers(res);
+    })();
   }, []);
 
-    // 4. Vote to ID
-    const vote = async (researchPaperId) => {
-      if (window.ethereum) {
-        const web3Modal = new Web3Modal();
-        const connection = await web3Modal.connect();
-        const provider = new ethers.providers.Web3Provider(connection);
-        const signer = provider.getSigner();
-  
-        const contract = new ethers.Contract(
-          meetSciContractAddress,
-          meetSciAbi,
-          signer
-        );
-  
-        const txRes = await contract.voteToId(researchPaperId, {
-          gasLimit: 500000000,
+  // 4. Vote to ID
+  const vote = async (researchPaperId) => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        signer
+      );
+
+      const txRes = await contract.voteToId(researchPaperId, {
+        gasLimit: 500000000,
+      });
+
+      setLoading(true);
+      await txRes.wait(1);
+      setLoading(false);
+      console.log(txRes);
+    }
+  };
+
+  /*
+    const [workForm, setWorkForm] = useState({
+    title: "",
+    description: "",
+    department: "",
+    uploadFile: "",
+  });
+  */
+
+  const getCurrentProfile = async () => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      let txRes;
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        provider
+      );
+
+      if (ethereum.isConnected()) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
         });
-  
-        setLoading(true);
-        await txRes.wait(1);
-        setLoading(false);
-  
-        console.log(txRes);
+        console.log(accounts[0]);
+        txRes = await contract.getResearcherProfile(accounts[0]);
       }
-    };
-  
+
+      if (txRes.name.length == 0) {
+        return;
+      }
+
+      let currentProfile = {
+        researcherId: Number(txRes.id._hex),
+        researcherAddress: txRes.researcher,
+        tokenAddress: txRes.tokenAddress,
+      };
+
+      setCurrentProfile(currentProfile);
+
+      console.log("Current Profile: ", currentProfile);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      await getCurrentProfile();
+    })();
+  }, []);
+
+  // Upload to filecoin to get token URI
+
+  // 7. Add work to profile
+  const addWork = async (
+    { title, description, department },
+    profileId,
+    researcherAddress
+
+    // fileUri
+  ) => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        signer
+      );
+
+      const txRes = await contract.addWorkToId(
+        profileId,
+        researcherAddress,
+        title,
+        description,
+        department,
+        "fileUri",
+        {
+          gasLimit: 500000000,
+        }
+      );
+
+      await txRes.wait(1);
+
+      console.log(txRes);
+    }
+  };
+
+  // 5. Get all research papers
+  const getAllResearcherPapers = async () => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        provider
+      );
+
+      const txRes = await contract.getAllPapers();
+
+      console.log(txRes);
+      return txRes;
+    }
+  };
+
+  useEffect(()=> {
+    (async () => {
+      const response = await getAllResearcherPapers();
+      console.log("Response to all papers: ", response);
+      setExploreResearchPapers(response);
+    })();
+  }, [])
 
   return (
     <CreateMeetContext.Provider
@@ -346,7 +477,14 @@ export const CreateMeetProvider = ({ children }) => {
         addResearcher,
         deployToken,
         exploreResearchers,
-        vote
+        vote,
+        toggleAddworkModal,
+        setToggleAddworkModal,
+        workForm,
+        setWorkForm,
+        addWork,
+        currentProfile,
+        exploreResearchPapers
       }}
     >
       {children}

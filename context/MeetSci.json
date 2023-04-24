@@ -250,6 +250,32 @@
         },
         {
             "inputs": [],
+            "name": "getCurrentProfileId",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getCurrentResearcherId",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
             "name": "getExploreProfiles",
             "outputs": [
                 {
@@ -372,6 +398,250 @@
                     "type": "address"
                 }
             ],
+            "name": "getProfilePapersByAddress",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "id",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "researcher",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "profileId",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "title",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "desc",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "department",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "fileURI",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalVotes",
+                            "type": "uint256"
+                        }
+                    ],
+                    "internalType": "struct MeetSci.ResearchPaper[]",
+                    "name": "",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_schlor",
+                    "type": "address"
+                }
+            ],
+            "name": "getProfilesSubscribed",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "id",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "researcher",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "symbol",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "department",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "tokenAddress",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "tokenSupply",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalVotes",
+                            "type": "uint256"
+                        }
+                    ],
+                    "internalType": "struct MeetSci.Profile[]",
+                    "name": "",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_researcher",
+                    "type": "address"
+                }
+            ],
+            "name": "getResearcherProfile",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "id",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "researcher",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "symbol",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "department",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "tokenAddress",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "tokenSupply",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalVotes",
+                            "type": "uint256"
+                        }
+                    ],
+                    "internalType": "struct MeetSci.Profile",
+                    "name": "",
+                    "type": "tuple"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_researcherId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getResearcherProfileById",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "id",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "researcher",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "symbol",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "department",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "tokenAddress",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "tokenSupply",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalVotes",
+                            "type": "uint256"
+                        }
+                    ],
+                    "internalType": "struct MeetSci.Profile",
+                    "name": "",
+                    "type": "tuple"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_researcher",
+                    "type": "address"
+                }
+            ],
             "name": "getTokenAddress",
             "outputs": [
                 {
@@ -456,6 +726,60 @@
                     "internalType": "string",
                     "name": "fileURI",
                     "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "totalVotes",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "profiles",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "id",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "address",
+                    "name": "researcher",
+                    "type": "address"
+                },
+                {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "department",
+                    "type": "string"
+                },
+                {
+                    "internalType": "address",
+                    "name": "tokenAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "tokenSupply",
+                    "type": "uint256"
                 },
                 {
                     "internalType": "uint256",
@@ -583,6 +907,60 @@
                 }
             ],
             "name": "researcherPaper",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "id",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "address",
+                    "name": "researcher",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "profileId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "desc",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "department",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "fileURI",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "totalVotes",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "researchPapers",
             "outputs": [
                 {
                     "internalType": "uint256",
