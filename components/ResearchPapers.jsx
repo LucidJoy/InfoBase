@@ -1,4 +1,5 @@
 import React from "react";
+import { shortenAddress } from "@/utils/shortenAddr";
 
 const ResearchPapers = ({key, myKey, element}) => {
     const handleInfo = async () => {
@@ -14,6 +15,12 @@ const ResearchPapers = ({key, myKey, element}) => {
           Profile ID:{" "}
           <span className="text-[14px] font-normal text-[#A5ACBA]">
             {Number(element.profileId._hex)}
+          </span>
+        </p>
+        <p className="font-semibold text-[16px] text-white">
+          Address:{" "}
+          <span className="text-[14px] font-normal text-[#A5ACBA]">
+            {shortenAddress(element.researcher)}
           </span>
         </p>
         <p className="font-semibold text-[16px] text-white">

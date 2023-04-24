@@ -1,10 +1,29 @@
-import React from "react";
+import React, {useContext} from "react";
 import { pattern, arr_up } from "@/assets";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
-const Researcher = ({ key, myKey }) => {
+
+import CreateMeetContext from "@/context/MeetContext";
+
+const Researcher = ({ key, myKey, element }) => {
+  const router = useRouter();
+  const {join, address, mintTokens} = useContext(CreateMeetContext);
+
   const handleJoin = async () => {
-    console.log(myKey);
+    let tokenAddress = element.tokenAddress;
+    let researcher = element.researcher;
+    console.log("Token Address: ", element.tokenAddress);
+    console.log("Researcher Address: ", element.researcher);
+    console.log("Scholar Address: ", address);
+
+    const mint = await mintTokens(tokenAddress);
+    console.log("Minting response: ", mint);
+
+    const response = await join(researcher);
+    console.log("Response from joining", response);
+
+    router.push("gated");
   };
 
   return (

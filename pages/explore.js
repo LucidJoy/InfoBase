@@ -49,6 +49,7 @@ const explore = () => {
                 <Researcher
                   key={i}
                   myKey={Number(element.id._hex)}
+                  element={element}
                 ></Researcher>
               );
             })}

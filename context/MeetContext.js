@@ -4,6 +4,7 @@ import meetSciNFT from "./MeetSciNFT.json";
 import meetSci from "./MeetSci.json";
 import acl from "./ACL.json";
 import tokenDeployer from "./TokenDeployer.json";
+import token from "./Token.json";
 import { ethers, utils } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
@@ -18,7 +19,7 @@ const tokenDeployerAddress = "0xb88b3a36B04622ca36E877F455D88784c8F07708";
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
 const accessListAbi = acl.abi;
-const tokenAbi = "";
+const tokenAbi = token.abi;
 const tokenDeployerAbi = tokenDeployer.abi;
 
 export const CreateMeetProvider = ({ children }) => {
@@ -455,23 +456,88 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     (async () => {
       const response = await getAllResearcherPapers();
       console.log("Response to all papers: ", response);
       setExploreResearchPapers(response);
     })();
-  }, [])
+  }, []);
 
-  const convertNumToEther = () => {
-    const output = utils.parseEther("1");
-    console.log("Parse Ether: ", output);
-    console.log("Actual number: ", Number(output._hex));
-  }
+  // const convertNumToEther = () => {
+  //   const output = utils.parseEther("1");
+  //   console.log("Parse Ether: ", output);
+  //   console.log("Actual number: ", Number(output._hex));
+  // }
 
   // useEffect(()=> {
   //   convertNumToEther();
   // }, [])
+
+  // Mint subscribe tokens
+  const mintTokens = async (tokenAddress) => {
+    let scholar;
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      if (ethereum.isConnected()) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        scholar = accounts[0];
+      }
+
+      const contract = new ethers.Contract(tokenAddress, tokenAbi, signer);
+
+      const tokenAmt = utils.parseEther("1.0");
+
+      const txRes = await contract.mint(scholar, tokenAmt, {
+        gasLimit: 500000000,
+      });
+
+      await txRes.wait(1);
+
+      console.log(txRes);
+      return true;
+    }
+  };
+
+  // 3. Join to ID
+  const join = async (researcher) => {
+    let scholar;
+
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      if (ethereum.isConnected()) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        scholar = accounts[0];
+      }
+
+      const meetSciContract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        signer
+      );
+
+      const txRes = await meetSciContract.subscribe(scholar, researcher, {
+        gasLimit: 500000000,
+      });
+
+      await txRes.wait(1);
+
+      console.log(txRes);
+      return true;
+    }
+  };
 
   return (
     <CreateMeetContext.Provider
@@ -495,7 +561,9 @@ export const CreateMeetProvider = ({ children }) => {
         setWorkForm,
         addWork,
         currentProfile,
-        exploreResearchPapers
+        exploreResearchPapers,
+        join,
+        mintTokens,
       }}
     >
       {children}
