@@ -5,7 +5,7 @@ import { Navbar } from "@/components";
 const funding = () => {
   return (
     <div>
-      <Navbar funding />
+      <Navbar explore />
 
       <div className='h-[100vh] flex flex-col items-center'>
         <p className='text-center mt-[90px] text-[30px] text-[#950740]'>POOL</p>
