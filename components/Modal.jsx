@@ -15,17 +15,17 @@ const Modal = () => {
   } = useContext(CreateMeetContext);
 
   const handleMint = async (address) => {
-    const res = await mintNFT(address);
+    const res = await mintNFT();
     console.log("Mint: ", res);
     router.push("explore");
   }
 
-  const handleCreateProfile = async (address) => {
+  const handleCreateProfile = async () => {
     const resToken = await deployToken(form);
     console.log("Res: ", typeof resToken);
-    const res = await mintNFT(address);
+    const res = await mintNFT();
     console.log("Mint: ", res);
-    const resProfile = await addResearcher(form, resToken, address);
+    const resProfile = await addResearcher(form, resToken);
     console.log(resProfile);
     router.push("explore");
   };
@@ -105,7 +105,7 @@ const Modal = () => {
       <div className='flex items-center justify-center w-full'>
         <button
           className='btn bg-[#c3073f] text-[#1a1a1d] text-[15px] px-[50px] hover:bg-[#b00639] -mt-[0px]'
-          onClick={() => handleCreateProfile(address)}
+          onClick={() => handleCreateProfile()}
         >
           Create
         </button>

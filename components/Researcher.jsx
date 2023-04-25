@@ -1,14 +1,13 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { pattern, arr_up } from "@/assets";
 import Image from "next/image";
 import { useRouter } from "next/router";
-
 
 import CreateMeetContext from "@/context/MeetContext";
 
 const Researcher = ({ key, myKey, element }) => {
   const router = useRouter();
-  const {join, address, mintTokens} = useContext(CreateMeetContext);
+  const { join, address, mintTokens } = useContext(CreateMeetContext);
 
   const handleJoin = async () => {
     let tokenAddress = element.tokenAddress;
@@ -20,10 +19,14 @@ const Researcher = ({ key, myKey, element }) => {
     const mint = await mintTokens(tokenAddress);
     console.log("Minting response: ", mint);
 
-    const response = await join(researcher);
-    console.log("Response from joining", response);
+    if (mint) {
+      const response = await join(researcher);
+      console.log("Response from joining", response);
 
-    router.push("gated");
+      if (response) {
+        router.push("gated");
+      }
+    }
   };
 
   return (

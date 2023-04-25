@@ -14,7 +14,7 @@ const CreateMeetContext = createContext({});
 const meetSciContractAddress = "0x8cdba4cB129664CeD2a271a818BB7F94B0ff86da";
 const nftContractAddress = "0xE65a35704e6DdF2b93caBBa149F917694B4d4dC0";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
-const tokenDeployerAddress = "0xb88b3a36B04622ca36E877F455D88784c8F07708";
+const tokenDeployerAddress = "0x57C304C2893EF70130cdDbf6ba40adf82605f588";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
@@ -194,7 +194,8 @@ export const CreateMeetProvider = ({ children }) => {
   //   console.log("Authenticated: ", authentication);
   // }, [])
 
-  const mintNFT = async (receiver) => {
+  const mintNFT = async () => {
+    let receiver;
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
@@ -202,6 +203,14 @@ export const CreateMeetProvider = ({ children }) => {
       const signer = provider.getSigner();
 
       const contract = new ethers.Contract(nftContractAddress, nftAbi, signer);
+
+      if (ethereum.isConnected()) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        console.log(accounts[0]);
+        receiver = accounts[0];
+      }
 
       const txRes = await contract.safeMint(receiver, {
         gasLimit: 500000000,
@@ -228,8 +237,11 @@ export const CreateMeetProvider = ({ children }) => {
         signer
       );
 
+      maxSupply = utils.parseEther(maxSupply);
+      console.log(maxSupply);
+
       const txRes = await contract.createToken(alias, tokenSymbol, maxSupply, {
-        gasLimit: 500000000,
+        gasLimit: 5000000000,
       });
 
       await txRes.wait(1);
@@ -478,30 +490,32 @@ export const CreateMeetProvider = ({ children }) => {
   const mintTokens = async (tokenAddress) => {
     let scholar;
     if (window.ethereum) {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+      try {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
 
-      if (ethereum.isConnected()) {
-        const accounts = await window.ethereum.request({
-          method: "eth_accounts",
-        });
-        scholar = accounts[0];
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          scholar = accounts[0];
+        }
+
+        const contract = new ethers.Contract(tokenAddress, tokenAbi, signer);
+
+        const tokenAmt = utils.parseEther("1.0");
+
+        const txRes = await contract.mint(scholar, tokenAmt);
+
+        await txRes.wait(1);
+
+        console.log(txRes);
+        return true;
+      } catch (error) {
+        alert("All tokens of the researcher are minted!");
       }
-
-      const contract = new ethers.Contract(tokenAddress, tokenAbi, signer);
-
-      const tokenAmt = utils.parseEther("1.0");
-
-      const txRes = await contract.mint(scholar, tokenAmt, {
-        gasLimit: 500000000,
-      });
-
-      await txRes.wait(1);
-
-      console.log(txRes);
-      return true;
     }
   };
 
@@ -510,32 +524,36 @@ export const CreateMeetProvider = ({ children }) => {
     let scholar;
 
     if (window.ethereum) {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+      try {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
 
-      if (ethereum.isConnected()) {
-        const accounts = await window.ethereum.request({
-          method: "eth_accounts",
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          scholar = accounts[0];
+        }
+
+        const meetSciContract = new ethers.Contract(
+          meetSciContractAddress,
+          meetSciAbi,
+          signer
+        );
+
+        const txRes = await meetSciContract.subscribe(scholar, researcher, {
+          gasLimit: 5000000000,
         });
-        scholar = accounts[0];
+
+        await txRes.wait(1);
+
+        console.log(txRes);
+        return true;
+      } catch (error) {
+        alert("Join error");
       }
-
-      const meetSciContract = new ethers.Contract(
-        meetSciContractAddress,
-        meetSciAbi,
-        signer
-      );
-
-      const txRes = await meetSciContract.subscribe(scholar, researcher, {
-        gasLimit: 500000000,
-      });
-
-      await txRes.wait(1);
-
-      console.log(txRes);
-      return true;
     }
   };
 
