@@ -46,7 +46,7 @@ const AddworkModal = () => {
           <input
             type='text'
             id='description'
-            placeholder='Enter department:'
+            placeholder='Enter department'
             className='w-[300px] px-[10px] py-[5px] rounded-[5px] outline-none bg-[#1a1a1d] text-white font-normal text-[16px] placeholder:text-[#ffffff48]'
             onChange={(e) =>
               setWorkForm({ ...workForm, description: e.target.value })
