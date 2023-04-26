@@ -2,16 +2,22 @@ import React, { useContext, useState } from "react";
 
 import { Navbar } from "@/components";
 import CreateMeetContext from "@/context/MeetContext";
+import TableRow from "@/components/TableRow";
 
 const funding = () => {
-  const { fundingAmount, setFundingAmount, isFund, setIsFund } =
-    useContext(CreateMeetContext);
+  const {
+    fundingAmount,
+    setFundingAmount,
+    isFund,
+    setIsFund,
+    exploreResearchers,
+  } = useContext(CreateMeetContext);
 
   const [poolAmount, setPoolAmount] = useState(0);
 
   return (
     <div>
-      <Navbar funding />
+      <Navbar explore />
 
       <div className='nav-h flex flex-col items-center'>
         <div className='flex flex-row relative items-center mt-[30px] '>
@@ -56,7 +62,7 @@ const funding = () => {
           </p>
         </div>
 
-        <p className='text-center mt-[70px] text-[30px] text-[#950740]'>
+        <p className='text-center mt-[70px] text-[30px] text-[#ac2e4b]'>
           LEADERBOARD
         </p>
 
@@ -65,31 +71,21 @@ const funding = () => {
             <thead>
               <tr>
                 <th className='px-[20px] text-[20px] mb-[10px]'>Researcher</th>
-                <th className='px-[20px] text-[20px] mb-[10px]'>
-                  No. of votes
-                </th>
-                <th className='px-[20px] text-[20px] mb-[10px]'>Anc</th>
-                <th className='px-[20px] text-[20px] mb-[10px]'>Success</th>
+                <th className='px-[20px] text-[20px] mb-[10px]'>Upvotes</th>
+                <th className='px-[20px] text-[20px] mb-[10px]'>Amount</th>
+                <th className='px-[20px] text-[20px] mb-[10px]'>Contribute</th>
               </tr>
             </thead>
             <tbody>
-              <tr className=''>
-                <td className='px-[20px]'>Researcher 1</td>
-                <td className='px-[20px]'>10</td>
-                <td className='px-[20px]'>$1</td>
-              </tr>
-
-              <tr>
-                <td className='px-[20px]'>Researcher 2</td>
-                <td className='px-[20px]'>20</td>
-                <td className='px-[20px]'>$2</td>
-              </tr>
-
-              <tr>
-                <td className='px-[20px]'>Researcher 3</td>
-                <td className='px-[20px]'>30</td>
-                <td className='px-[20px]'>$3</td>
-              </tr>
+              {exploreResearchers?.map((element, i) => {
+                return (
+                  <TableRow
+                    key={i}
+                    myKey={Number(element.id._hex)}
+                    element={element}
+                  ></TableRow>
+                );
+              })}
             </tbody>
           </table>
         </div>

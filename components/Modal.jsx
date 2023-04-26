@@ -15,13 +15,17 @@ const Modal = () => {
   } = useContext(CreateMeetContext);
 
   const handleMint = async (address) => {
-    const res = await mintNFT(address);
-  };
+    const res = await mintNFT();
+    console.log("Mint: ", res);
+    router.push("explore");
+  }
 
-  const handleCreateProfile = async (address) => {
+  const handleCreateProfile = async () => {
     const resToken = await deployToken(form);
     console.log("Res: ", typeof resToken);
-    const resProfile = await addResearcher(form, resToken, address);
+    const res = await mintNFT();
+    console.log("Mint: ", res);
+    const resProfile = await addResearcher(form, resToken);
     console.log(resProfile);
     router.push("explore");
   };
@@ -114,7 +118,6 @@ const Modal = () => {
           className='text-[#767679] text-[14px] hover:text-[#9f9fa1] cursor-pointer transition-all duration-100 ease-in-out'
           onClick={() => {
             handleMint(address);
-            router.push("explore");
           }}
         >
           Continue as Scholar <span className='arrow'>&rarr;</span>

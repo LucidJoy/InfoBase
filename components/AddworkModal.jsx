@@ -3,8 +3,13 @@ import React, { useContext } from "react";
 import CreateMeetContext from "@/context/MeetContext";
 
 const AddworkModal = () => {
-  const { toggleAddworkModal, setToggleAddworkModal, workForm, setWorkForm } =
+  const { toggleAddworkModal, currentProfile, setToggleAddworkModal, addWork, workForm, setWorkForm } =
     useContext(CreateMeetContext);
+
+    const handleAddWork = async () => {
+      await addWork(workForm, currentProfile.researcherId, currentProfile.researcherAddress);
+      setToggleAddworkModal(false);
+    }
 
   return (
     <div className='w-[500px] h-[300px] bg-[#1a1a1d] border border-[#313134] rounded-[20px] text-white flex flex-col items-start justify-between z-30 p-[20px] relative'>
@@ -83,7 +88,7 @@ const AddworkModal = () => {
       <div className='flex items-center justify-center w-full'>
         <button
           className='btn bg-[#c3073f] text-[#1a1a1d] text-[15px] px-[50px] hover:bg-[#b00639] -mt-[0px]'
-          // onClick={() => handleCreateProfile()}
+          onClick={() => handleAddWork()}
         >
           Upload
         </button>

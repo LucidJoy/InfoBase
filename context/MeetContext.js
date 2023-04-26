@@ -4,21 +4,22 @@ import meetSciNFT from "./MeetSciNFT.json";
 import meetSci from "./MeetSci.json";
 import acl from "./ACL.json";
 import tokenDeployer from "./TokenDeployer.json";
-import { ethers } from "ethers";
+import token from "./Token.json";
+import { ethers, utils } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 
 const CreateMeetContext = createContext({});
 
-const meetSciContractAddress = "0xE755E7E7e73B3eec0a0CcF7B4E2FDC5F237024e5";
+const meetSciContractAddress = "0x8cdba4cB129664CeD2a271a818BB7F94B0ff86da";
 const nftContractAddress = "0xE65a35704e6DdF2b93caBBa149F917694B4d4dC0";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
-const tokenDeployerAddress = "0xb88b3a36B04622ca36E877F455D88784c8F07708";
+const tokenDeployerAddress = "0x57C304C2893EF70130cdDbf6ba40adf82605f588";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
 const accessListAbi = acl.abi;
-const tokenAbi = "";
+const tokenAbi = token.abi;
 const tokenDeployerAbi = tokenDeployer.abi;
 
 export const CreateMeetProvider = ({ children }) => {
@@ -28,6 +29,7 @@ export const CreateMeetProvider = ({ children }) => {
   const [isModal, setIsModal] = useState(false);
   const [authentication, setAuthentication] = useState(false);
   const [exploreResearchers, setExploreResearchers] = useState([]);
+  const [exploreResearchPapers, setExploreResearchPapers] = useState([]);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [form, setForm] = useState({
     alias: "",
@@ -47,6 +49,11 @@ export const CreateMeetProvider = ({ children }) => {
   // HUDDLE
   const [researchCardAddr, setResearchCardAddr] = useState("");
   const [roomId, setRoomId] = useState("");
+  const [currentProfile, setCurrentProfile] = useState({
+    researcherId: "",
+    researcherAddress: "",
+    tokenAddress: "",
+  });
 
   const router = useRouter();
 
@@ -68,11 +75,11 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      await checkIfWalletIsConnected();
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     await checkIfWalletIsConnected();
+  //   })();
+  // }, []);
 
   const connectWallet = async () => {
     if (!window.ethereum) return alert("Please install MetaMask.");
@@ -190,9 +197,11 @@ export const CreateMeetProvider = ({ children }) => {
   //   if (authentication == true) {
   //     router.push("explore")
   //   }
-  // })
+  //   console.log("Authenticated: ", authentication);
+  // }, [])
 
-  const mintNFT = async (receiver) => {
+  const mintNFT = async () => {
+    let receiver;
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
@@ -201,6 +210,14 @@ export const CreateMeetProvider = ({ children }) => {
 
       const contract = new ethers.Contract(nftContractAddress, nftAbi, signer);
 
+      if (ethereum.isConnected()) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        console.log(accounts[0]);
+        receiver = accounts[0];
+      }
+
       const txRes = await contract.safeMint(receiver, {
         gasLimit: 500000000,
       });
@@ -208,6 +225,7 @@ export const CreateMeetProvider = ({ children }) => {
       await txRes.wait();
 
       console.log(txRes);
+      return txRes;
     }
   };
 
@@ -225,8 +243,11 @@ export const CreateMeetProvider = ({ children }) => {
         signer
       );
 
+      maxSupply = utils.parseEther(maxSupply);
+      console.log(maxSupply);
+
       const txRes = await contract.createToken(alias, tokenSymbol, maxSupply, {
-        gasLimit: 500000000,
+        gasLimit: 5000000000,
       });
 
       await txRes.wait(1);
@@ -313,6 +334,235 @@ export const CreateMeetProvider = ({ children }) => {
     })();
   }, []);
 
+  // 4. Vote to ID
+  const vote = async (researchPaperId) => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        signer
+      );
+
+      const txRes = await contract.voteToId(researchPaperId, {
+        gasLimit: 500000000,
+      });
+
+      setLoading(true);
+      await txRes.wait(1);
+      setLoading(false);
+      console.log(txRes);
+    }
+  };
+
+  /*
+    const [workForm, setWorkForm] = useState({
+    title: "",
+    description: "",
+    department: "",
+    uploadFile: "",
+  });
+  */
+
+  const getCurrentProfile = async () => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      let txRes;
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        provider
+      );
+
+      if (ethereum.isConnected()) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        console.log(accounts[0]);
+        txRes = await contract.getResearcherProfile(accounts[0]);
+      }
+
+      if (txRes.name.length == 0) {
+        return;
+      }
+
+      let currentProfile = {
+        researcherId: Number(txRes.id._hex),
+        researcherAddress: txRes.researcher,
+        tokenAddress: txRes.tokenAddress,
+      };
+
+      setCurrentProfile(currentProfile);
+
+      console.log("Current Profile: ", currentProfile);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      await getCurrentProfile();
+    })();
+  }, []);
+
+  // Upload to filecoin to get token URI
+
+  // 7. Add work to profile
+  const addWork = async (
+    { title, description, department },
+    profileId,
+    researcherAddress
+
+    // fileUri
+  ) => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        signer
+      );
+
+      const txRes = await contract.addWorkToId(
+        profileId,
+        researcherAddress,
+        title,
+        description,
+        department,
+        "fileUri",
+        {
+          gasLimit: 500000000,
+        }
+      );
+
+      await txRes.wait(1);
+
+      console.log(txRes);
+    }
+  };
+
+  // 5. Get all research papers
+  const getAllResearcherPapers = async () => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        provider
+      );
+
+      const txRes = await contract.getAllPapers();
+
+      console.log(txRes);
+      return txRes;
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      const response = await getAllResearcherPapers();
+      console.log("Response to all papers: ", response);
+      setExploreResearchPapers(response);
+    })();
+  }, []);
+
+  // const convertNumToEther = () => {
+  //   const output = utils.parseEther("1");
+  //   console.log("Parse Ether: ", output);
+  //   console.log("Actual number: ", Number(output._hex));
+  // }
+
+  // useEffect(()=> {
+  //   convertNumToEther();
+  // }, [])
+
+  // Mint subscribe tokens
+  const mintTokens = async (tokenAddress) => {
+    let scholar;
+    if (window.ethereum) {
+      try {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          scholar = accounts[0];
+        }
+
+        const contract = new ethers.Contract(tokenAddress, tokenAbi, signer);
+
+        const tokenAmt = utils.parseEther("1.0");
+
+        const txRes = await contract.mint(scholar, tokenAmt);
+
+        await txRes.wait(1);
+
+        console.log(txRes);
+        return true;
+      } catch (error) {
+        alert("All tokens of the researcher are minted!");
+      }
+    }
+  };
+
+  // 3. Join to ID
+  const join = async (researcher) => {
+    let scholar;
+
+    if (window.ethereum) {
+      try {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          scholar = accounts[0];
+        }
+
+        const meetSciContract = new ethers.Contract(
+          meetSciContractAddress,
+          meetSciAbi,
+          signer
+        );
+
+        const txRes = await meetSciContract.subscribe(scholar, researcher, {
+          gasLimit: 5000000000,
+        });
+
+        await txRes.wait(1);
+
+        console.log(txRes);
+        return true;
+      } catch (error) {
+        alert("Join error");
+      }
+    }
+  };
+
   return (
     <CreateMeetContext.Provider
       value={{
@@ -328,6 +578,7 @@ export const CreateMeetProvider = ({ children }) => {
         addResearcher,
         deployToken,
         exploreResearchers,
+        vote,
         toggleAddworkModal,
         setToggleAddworkModal,
         workForm,
@@ -340,6 +591,11 @@ export const CreateMeetProvider = ({ children }) => {
         setFundingAmount,
         isFund,
         setIsFund,
+        addWork,
+        currentProfile,
+        exploreResearchPapers,
+        join,
+        mintTokens,
       }}
     >
       {children}
