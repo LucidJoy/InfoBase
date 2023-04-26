@@ -43,6 +43,12 @@ export const CreateMeetProvider = ({ children }) => {
     department: "",
     uploadFile: "",
   });
+  const [fundingAmount, setFundingAmount] = useState(0);
+  const [isFund, setIsFund] = useState(false);
+
+  // HUDDLE
+  const [researchCardAddr, setResearchCardAddr] = useState("");
+  const [roomId, setRoomId] = useState("");
   const [currentProfile, setCurrentProfile] = useState({
     researcherId: "",
     researcherAddress: "",
@@ -180,7 +186,7 @@ export const CreateMeetProvider = ({ children }) => {
         const accounts = await window.ethereum.request({
           method: "eth_accounts",
         });
-        console.log(accounts[0]);
+        // console.log(accounts[0]);
         const res = await checkNftBalance(accounts[0]);
         setAuthentication(true);
       }
@@ -577,6 +583,14 @@ export const CreateMeetProvider = ({ children }) => {
         setToggleAddworkModal,
         workForm,
         setWorkForm,
+        roomId,
+        setRoomId,
+        researchCardAddr,
+        setResearchCardAddr,
+        fundingAmount,
+        setFundingAmount,
+        isFund,
+        setIsFund,
         addWork,
         currentProfile,
         exploreResearchPapers,
