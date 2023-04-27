@@ -1,0 +1,4 @@
+1. DealClient.sol
+2. Prepare data acc to dealClient struct
+3. Function makeDealProposal (Struct), getDealRequest()
+4. Convert to CreateMeetContext5. Epoch and end epoch (epoch explorer)

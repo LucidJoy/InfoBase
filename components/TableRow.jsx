@@ -1,30 +1,56 @@
-import React, { useContext } from "react";
-
+import React, { useState, useContext, useEffect } from "react";
 import CreateMeetContext from "@/context/MeetContext";
+import { ethers, utils } from "ethers";
 
 const TableRow = ({ key, myKey, element }) => {
-  const { leaderboardFund, setLeaderboardFund } = useContext(CreateMeetContext);
+  const {
+    leaderboardFund,
+    setLeaderboardFund,
+    getTotalNumberOfDonors,
+    getDonationPerResearcher,
+  } = useContext(CreateMeetContext);
+
+  const [numberOf, setNumberOf] = useState(0);
+  const [amount, setAmount] = useState(0);
 
   const handleFund = () => {
-    if (myKey == Number(element.id._hex)) {
-      setLeaderboardFund(!leaderboardFund);
-    }
+    console.log(myKey);
   };
 
   const handleContribute = () => {
-    if (myKey == Number(element.id._hex)) {
+    if (myKey === Number(element.id._hex)) {
       setLeaderboardFund(!leaderboardFund);
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      let result = await getTotalNumberOfDonors(element.researcher);
+      result = Number(result._hex);
+      console.log(Number(result._hex));
+
+      setNumberOf(result);
+    })();
+  }, [myKey]);
+
+  useEffect(() => {
+    (async () => {
+      let result = await getDonationPerResearcher(element.researcher);
+      result = utils.formatUnits(Number(result).toString());
+      console.log(Number(result));
+
+      setAmount(result);
+    })();
+  }, [myKey]);
 
   return (
     <>
       <tr className=''>
         <td className='px-[20px]'>{element.name}</td>
-        <td className='px-[20px] text-center'>10</td>
-        <td className='px-[20px] text-center'>$1,000</td>
+        <td className='px-[20px]'>10</td>
+        <td className='px-[20px]'>$1,000</td>
         <td
-          className='px-[20px] cursor-pointer text-[#fee15d] font-semibold text-center'
+          className='px-[20px] cursor-pointer text-[#fee15d] font-semibold'
           onClick={() => handleFund()}
         >
           FUND
