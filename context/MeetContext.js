@@ -45,6 +45,7 @@ export const CreateMeetProvider = ({ children }) => {
   });
   const [fundingAmount, setFundingAmount] = useState(0);
   const [isFund, setIsFund] = useState(false);
+  const [leaderboardFund, setLeaderboardFund] = useState(false);
 
   // HUDDLE
   const [researchCardAddr, setResearchCardAddr] = useState("");
@@ -596,6 +597,8 @@ export const CreateMeetProvider = ({ children }) => {
         exploreResearchPapers,
         join,
         mintTokens,
+        leaderboardFund,
+        setLeaderboardFund,
       }}
     >
       {children}
