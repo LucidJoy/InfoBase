@@ -4,6 +4,7 @@ import meetSciNFT from "./MeetSciNFT.json";
 import meetSci from "./MeetSci.json";
 import acl from "./ACL.json";
 import tokenDeployer from "./TokenDeployer.json";
+import pool from "./Pool.json";
 import token from "./Token.json";
 import { ethers, utils } from "ethers";
 import Web3Modal from "web3modal";
@@ -15,12 +16,14 @@ const meetSciContractAddress = "0x8cdba4cB129664CeD2a271a818BB7F94B0ff86da";
 const nftContractAddress = "0xE65a35704e6DdF2b93caBBa149F917694B4d4dC0";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
 const tokenDeployerAddress = "0x57C304C2893EF70130cdDbf6ba40adf82605f588";
+const poolAddress = "0x82c226fE07EffBe67D5A0B1C5003386CF0dc15fA";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
 const accessListAbi = acl.abi;
 const tokenAbi = token.abi;
 const tokenDeployerAbi = tokenDeployer.abi;
+const poolAbi = pool.abi;
 
 export const CreateMeetProvider = ({ children }) => {
   const [address, setAddress] = useState("");
@@ -45,6 +48,7 @@ export const CreateMeetProvider = ({ children }) => {
   });
   const [fundingAmount, setFundingAmount] = useState(0);
   const [isFund, setIsFund] = useState(false);
+  const [matchingValue, setMatchingValue] = useState(0);
 
   // HUDDLE
   const [researchCardAddr, setResearchCardAddr] = useState("");
@@ -563,6 +567,185 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
+  // Pool
+  const depositToMainPool = async (amount) => {
+    let user;
+
+    if (window.ethereum) {
+      try {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          user = accounts[0];
+        }
+
+        amount = utils.parseEther(amount);
+
+        const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
+
+        const txRes = await poolContract.depositMoneyToPool({
+          value: amount,
+          gasLimit: 5000000000,
+        });
+
+        await txRes.wait(1);
+
+        console.log(txRes);
+        return true;
+      } catch (error) {
+        alert("Funding error");
+      }
+    }
+  };
+
+  const fundProfile = async (researcher, donor, amount) => {
+    let user;
+
+    if (window.ethereum) {
+      try {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          user = accounts[0];
+        }
+
+        const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
+
+        const txRes = await poolContract.fundResearcher(researcher, donor, {
+          value: amount,
+          gasLimit: 5000000000,
+        });
+
+        await txRes.wait(1);
+
+        console.log(txRes);
+        return true;
+      } catch (error) {
+        alert("Funding error");
+      }
+    }
+  };
+
+  const completeFunding = async (researchers, amounts) => {
+    let user;
+
+    if (window.ethereum) {
+      try {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          user = accounts[0];
+        }
+
+        const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
+
+        const txRes = await poolContract.disperseFunds(researchers, amounts, {
+          gasLimit: 5000000000,
+        });
+
+        await txRes.wait(1);
+
+        console.log(txRes);
+        return true;
+      } catch (error) {
+        alert("Funding error");
+      }
+    }
+  };
+
+  const getTotalNumberOfDonors = async (researcher) => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const poolContract = new ethers.Contract(poolAddress, poolAbi, provider);
+
+      const txRes = await poolContract.getNumberOfDonors(researcher);
+
+      console.log("Number of Donors: ", txRes);
+      return txRes;
+    }
+  };
+
+  const getDonationPerResearcher = async (researcher) => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const poolContract = new ethers.Contract(poolAddress, poolAbi, provider);
+
+      const txRes = await poolContract.amountPerResearcher(researcher);
+
+      console.log("Amount researcher raised: ", txRes);
+
+      return txRes;
+    }
+  };
+
+  const getMatchingBalance = async () => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
+
+      const txRes = await poolContract.getPoolBalance();
+
+      console.log("Matching Pool balance: ", txRes);
+      return txRes;
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      let amt = await getMatchingBalance();
+      amt = utils.formatUnits((Number(amt._hex)).toString());
+      console.log("Formatted Amt: ",amt);
+
+      setMatchingValue(amt);
+    })();
+  }, []);
+
+  const getTotalPoolBalance = async () => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
+
+      const txRes = await poolContract.getContractbalance();
+
+      console.log("Total Pool balance: ", txRes);
+      return txRes;
+    }
+  };
+
   return (
     <CreateMeetContext.Provider
       value={{
@@ -596,6 +779,14 @@ export const CreateMeetProvider = ({ children }) => {
         exploreResearchPapers,
         join,
         mintTokens,
+        getTotalPoolBalance,
+        getMatchingBalance,
+        getTotalNumberOfDonors,
+        completeFunding,
+        fundProfile,
+        depositToMainPool,
+        matchingValue,
+        getDonationPerResearcher
       }}
     >
       {children}

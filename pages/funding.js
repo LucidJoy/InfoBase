@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Navbar } from "@/components";
 import CreateMeetContext from "@/context/MeetContext";
@@ -11,9 +11,24 @@ const funding = () => {
     isFund,
     setIsFund,
     exploreResearchers,
+    matchingValue,
+    depositToMainPool,
+    getMatchingBalance
   } = useContext(CreateMeetContext);
 
   const [poolAmount, setPoolAmount] = useState(0);
+
+  const handlePoolFund = async () => {
+    const res = await depositToMainPool(fundingAmount);
+    console.log("Funding to main pool: ", res);
+  }
+
+  useEffect(() => {
+    (async () => {
+      let result = await getMatchingBalance();
+      console.log("Matching pool balance: ", result);
+    })();
+  }, [])
 
   return (
     <div>
@@ -45,7 +60,8 @@ const funding = () => {
               <button
                 className='bg-[#950740] text-[#1a1a1d] px-[30px] py-[5px] rounded-[5px] font-medium uppercase transition-all duration-150 ease-in-out hover:bg-[#7b0534] hover:text-white text-[14px]'
                 onClick={(e) => {
-                  setPoolAmount(+fundingAmount + +poolAmount);
+                  // setPoolAmount(+fundingAmount + +poolAmount);
+                  handlePoolFund();
                   setIsFund(!isFund);
                   console.log(poolAmount);
                 }}
@@ -58,7 +74,7 @@ const funding = () => {
 
         <div className='mt-[20px] w-[400px] h-[125px] bg-[#4e4e50] rounded-[15px] flex items-center justify-center text-[60px]'>
           <p className='text-[#fff] font-semibold animate-pulse'>
-            ${poolAmount}
+            {matchingValue} tFIL
           </p>
         </div>
 
