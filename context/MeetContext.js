@@ -48,6 +48,7 @@ export const CreateMeetProvider = ({ children }) => {
   });
   const [fundingAmount, setFundingAmount] = useState(0);
   const [isFund, setIsFund] = useState(false);
+  const [leaderboardFund, setLeaderboardFund] = useState(false);
   const [matchingValue, setMatchingValue] = useState(0);
 
   // HUDDLE
@@ -723,8 +724,8 @@ export const CreateMeetProvider = ({ children }) => {
   useEffect(() => {
     (async () => {
       let amt = await getMatchingBalance();
-      amt = utils.formatUnits((Number(amt._hex)).toString());
-      console.log("Formatted Amt: ",amt);
+      amt = utils.formatUnits(Number(amt._hex).toString());
+      console.log("Formatted Amt: ", amt);
 
       setMatchingValue(amt);
     })();
@@ -779,6 +780,8 @@ export const CreateMeetProvider = ({ children }) => {
         exploreResearchPapers,
         join,
         mintTokens,
+        leaderboardFund,
+        setLeaderboardFund,
         getTotalPoolBalance,
         getMatchingBalance,
         getTotalNumberOfDonors,
@@ -786,7 +789,7 @@ export const CreateMeetProvider = ({ children }) => {
         fundProfile,
         depositToMainPool,
         matchingValue,
-        getDonationPerResearcher
+        getDonationPerResearcher,
       }}
     >
       {children}
