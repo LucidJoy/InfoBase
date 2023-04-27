@@ -1,9 +1,22 @@
 import React from "react";
 import { shortenAddress } from "@/utils/shortenAddr";
+import axios from "axios";
 
 const ResearchPapers = ({key, myKey, element}) => {
     const handleInfo = async () => {
-        console.log(myKey);
+      console.log(myKey);
+
+      const res = await axios({
+        method: 'get',
+        url: `https://infobase.onrender.com/docs_info/${myKey}`,
+        withCredentials: false,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        }
+      })
+      // const res = await axios(`https://infobase.onrender.com/docs_info/${myKey}`);
+      console.log(`API response for ${myKey} is `, res.data);
     };
 
   return (
