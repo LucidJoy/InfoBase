@@ -14,13 +14,16 @@ const TableRow = ({ key, myKey, element }) => {
   const [amount, setAmount] = useState(0);
 
   const handleFund = () => {
-    console.log(myKey);
-  };
-
-  const handleContribute = () => {
     if (myKey === Number(element.id._hex)) {
       setLeaderboardFund(!leaderboardFund);
     }
+  }
+
+  const handleContribute = () => {
+    // if (myKey === Number(element.id._hex)) {
+    //   setLeaderboardFund(!leaderboardFund);
+    // }
+    console.log(myKey);
   };
 
   useEffect(() => {
@@ -47,11 +50,11 @@ const TableRow = ({ key, myKey, element }) => {
     <>
       <tr className=''>
         <td className='px-[20px]'>{element.name}</td>
-        <td className='px-[20px]'>10</td>
-        <td className='px-[20px]'>$1,000</td>
+        <td className='px-[20px]'>{numberOf}</td>
+        <td className='px-[20px]'>{amount} tFil</td>
         <td
           className='px-[20px] cursor-pointer text-[#fee15d] font-semibold'
-          onClick={() => handleFund()}
+          onClick={() => handleContribute()}
         >
           FUND
         </td>
@@ -67,7 +70,7 @@ const TableRow = ({ key, myKey, element }) => {
 
             <button
               className='bg-[#950740] text-[#1a1a1d] w-fit px-[30px] py-[5px] rounded-[5px] font-semibold uppercase transition-all duration-150 ease-in-out hover:bg-[#7b0534] hover:text-white text-[14px]'
-              onClick={() => handleContribute()}
+              onClick={() => handleFund()}
             >
               Fund
             </button>

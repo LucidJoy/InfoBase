@@ -9,6 +9,8 @@ import token from "./Token.json";
 import { ethers, utils } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
+import lighthouse, { upload } from "@lighthouse-web3/sdk";
+import { Web3Storage } from 'web3.storage'
 
 const CreateMeetContext = createContext({});
 
@@ -24,6 +26,12 @@ const accessListAbi = acl.abi;
 const tokenAbi = token.abi;
 const tokenDeployerAbi = tokenDeployer.abi;
 const poolAbi = pool.abi;
+
+
+function makeStorageClient () {
+  return new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGQ5RTNjMTkxMThiODkzY2RGNTU1MzI3QTREODBCYTZFOEE3NGMwMzgiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODI2ODMyMDY0MDAsIm5hbWUiOiJJbmZvQmFzZSJ9.ZEVAErCprVgw0mehsGzxZb6GlEP1pW_fwj-tRTUl2_I" })
+}
+
 
 export const CreateMeetProvider = ({ children }) => {
   const [address, setAddress] = useState("");
@@ -61,6 +69,51 @@ export const CreateMeetProvider = ({ children }) => {
   });
 
   const router = useRouter();
+
+  const storeFiles = async (files) => {
+    const client = makeStorageClient()
+    const cid = await client.put(files)
+    console.log('stored files with cid:', cid)
+    return cid
+  }
+
+  const progressCallback = (progressData) => {
+    let percentageDone =
+      100 - (progressData?.total / progressData?.uploaded)?.toFixed(2);
+    console.log(percentageDone);
+  };
+
+  const uploadFile = async (e) => {
+    // Push file to lighthouse node
+    // Both file and folder are supported by upload function
+    try {
+      e.persist();
+      console.log("Lighthouse object: ", lighthouse);
+
+      // const output = await lighthouse.upload(e,"0b3c3932.48efe20e0ff742b9971d2d2c40947539",progressCallback);
+      const output = await upload(
+        e,
+        "0b3c3932.48efe20e0ff742b9971d2d2c40947539",
+        progressCallback
+      );
+      console.log("File Status:", output);
+      /*
+        output:
+          data: {
+            Name: "filename.txt",
+            Size: 88000,
+            Hash: "QmWNmn2gr4ZihNPqaC5oTeePsHvFtkWNpjY3cD6Fd5am1w"
+          }
+        Note: Hash in response is CID.
+      */
+
+      console.log(
+        "Visit at https://gateway.lighthouse.storage/ipfs/" + output.data.Hash
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -422,7 +475,7 @@ export const CreateMeetProvider = ({ children }) => {
 
   // 7. Add work to profile
   const addWork = async (
-    { title, description, department },
+    { title, description, department, uploadFile },
     profileId,
     researcherAddress
 
@@ -446,7 +499,7 @@ export const CreateMeetProvider = ({ children }) => {
         title,
         description,
         department,
-        "fileUri",
+        uploadFile,
         {
           gasLimit: 500000000,
         }
@@ -455,6 +508,7 @@ export const CreateMeetProvider = ({ children }) => {
       await txRes.wait(1);
 
       console.log(txRes);
+      return true;
     }
   };
 
@@ -624,7 +678,7 @@ export const CreateMeetProvider = ({ children }) => {
 
         const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
 
-        const txRes = await poolContract.fundResearcher(researcher, donor, {
+        const txRes = await poolContract.fundResearcher(researcher, user, {
           value: amount,
           gasLimit: 5000000000,
         });
@@ -790,6 +844,8 @@ export const CreateMeetProvider = ({ children }) => {
         depositToMainPool,
         matchingValue,
         getDonationPerResearcher,
+        uploadFile,
+        storeFiles
       }}
     >
       {children}
