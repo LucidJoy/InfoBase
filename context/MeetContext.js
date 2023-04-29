@@ -10,11 +10,11 @@ import { ethers, utils } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 import lighthouse, { upload } from "@lighthouse-web3/sdk";
-import { Web3Storage } from "web3.storage";
+// import { Web3Storage } from "web3.storage";
 
 const CreateMeetContext = createContext({});
 
-const meetSciContractAddress = "0x8cdba4cB129664CeD2a271a818BB7F94B0ff86da";
+const meetSciContractAddress = "0xB5a42c5cD7C202abf1ff0d4142c4104E62062db1";
 const nftContractAddress = "0x4d8B7c0b212826cA116EC6F6dD43dC935EF098B2";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
 const tokenDeployerAddress = "0x57C304C2893EF70130cdDbf6ba40adf82605f588";
@@ -27,12 +27,12 @@ const tokenAbi = token.abi;
 const tokenDeployerAbi = tokenDeployer.abi;
 const poolAbi = pool.abi;
 
-function makeStorageClient() {
-  return new Web3Storage({
-    token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGQ5RTNjMTkxMThiODkzY2RGNTU1MzI3QTREODBCYTZFOEE3NGMwMzgiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODI2ODMyMDY0MDAsIm5hbWUiOiJJbmZvQmFzZSJ9.ZEVAErCprVgw0mehsGzxZb6GlEP1pW_fwj-tRTUl2_I",
-  });
-}
+// function makeStorageClient() {
+//   return new Web3Storage({
+//     token:
+//       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGQ5RTNjMTkxMThiODkzY2RGNTU1MzI3QTREODBCYTZFOEE3NGMwMzgiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODI2ODMyMDY0MDAsIm5hbWUiOiJJbmZvQmFzZSJ9.ZEVAErCprVgw0mehsGzxZb6GlEP1pW_fwj-tRTUl2_I",
+//   });
+// }
 
 export const CreateMeetProvider = ({ children }) => {
   const [address, setAddress] = useState("");
@@ -198,9 +198,7 @@ export const CreateMeetProvider = ({ children }) => {
               {
                 chainId: "0xc45",
                 chainName: "Filecoin - Hyperspace testnet",
-                rpcUrls: [
-                  "https://filecoin-hyperspace.chainup.net/rpc/v1",
-                ] /* ... */,
+                rpcUrls: ["https://rpc.ankr.com/filecoin_testnet"] /* ... */,
               },
             ],
           });
@@ -295,7 +293,7 @@ export const CreateMeetProvider = ({ children }) => {
         return true;
       }
     } catch (error) {
-      alert("Error while minting NFT!")
+      alert("Error while minting NFT!");
     }
   };
 
@@ -418,7 +416,7 @@ export const CreateMeetProvider = ({ children }) => {
         signer
       );
 
-      const txRes = await contract.voteToId(researchPaperId, {
+      const txRes = await contract.voteToProfileId(researchPaperId, {
         gasLimit: 500000000,
       });
 
@@ -642,7 +640,11 @@ export const CreateMeetProvider = ({ children }) => {
       const provider = new ethers.providers.Web3Provider(connection);
       const signer = provider.getSigner();
 
-      const contract = new ethers.Contract(meetSciContractAddress, meetSciAbi, signer);
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        signer
+      );
 
       const txRes = await contract.getResearcherProfileById(profileId);
 
@@ -652,7 +654,7 @@ export const CreateMeetProvider = ({ children }) => {
       alert("Some error");
       console.log(error);
     }
-  }
+  };
 
   // Pool
   const depositToMainPool = async (amount) => {
@@ -710,7 +712,7 @@ export const CreateMeetProvider = ({ children }) => {
 
         const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
 
-        amount = utils.parseEther(amount.toString())
+        amount = utils.parseEther(amount.toString());
 
         const txRes = await poolContract.fundResearcher(researcher, user, {
           value: amount,
@@ -881,7 +883,7 @@ export const CreateMeetProvider = ({ children }) => {
         getDonationPerResearcher,
         uploadFile,
         storeFiles,
-        getProfileById
+        getProfileById,
       }}
     >
       {children}

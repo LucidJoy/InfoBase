@@ -1,6 +1,7 @@
 import React from "react";
 import { shortenAddress } from "@/utils/shortenAddr";
 import axios from "axios";
+import Link from "next/link";
 
 const ResearchPapers = ({ key, myKey, element }) => {
   const handleInfo = async () => {
@@ -24,14 +25,14 @@ const ResearchPapers = ({ key, myKey, element }) => {
       <div className='flex flex-col justify-start p-[15px] gap-[5px]'>
         <p className='font-semibold text-[16px] text-white'>
           Profile ID:{" "}
-          <span className='text-[14px] font-normal text-[#A5ACBA]'>
-            {Number(element?.profileId._hex)}
+          <span className='text-[14px] font-semibold text-[#ef3cff]'>
+            {/* {element && Number(element)} */}
           </span>
         </p>
         <p className='font-semibold text-[16px] text-white'>
           Address:{" "}
-          <span className='text-[14px] font-normal text-[#A5ACBA]'>
-            {/* {shortenAddress(element?.researcher)} */}
+          <span className='text-[14px] text-[#3eecff] font-semibold'>
+            {/* {element && shortenAddress(element.researcher)} */}
           </span>
         </p>
         <p className='font-semibold text-[16px] text-white'>
@@ -58,7 +59,7 @@ const ResearchPapers = ({ key, myKey, element }) => {
         <Link
           href={{
             pathname: `/info`,
-            query: element,
+            query: { element },
           }}
         >
           <button
