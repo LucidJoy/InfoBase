@@ -15,13 +15,6 @@ const TableRow = ({ key, myKey, element }) => {
   const [numberOf, setNumberOf] = useState(0);
   const [amount, setAmount] = useState(0);
 
-<<<<<<< HEAD
-  const handleFund = () => {
-    if (myKey === Number(element.id._hex)) {
-      setLeaderboardFund(!leaderboardFund);
-    }
-  };
-=======
   const [researcherDonationAmt, setResearcherDonationAmt] = useState(0);
   const [researcherAddr, setResearcherAddr] = useState('');
 
@@ -39,7 +32,6 @@ const TableRow = ({ key, myKey, element }) => {
     console.log("Donation to researcher no. :", myKey);
     const response = await fundProfile(researcherAddr, researcherDonationAmt);
 
->>>>>>> 8b8f228cbb668ad5cd8a124f584ca04d14a3c8be
 
   };
 
