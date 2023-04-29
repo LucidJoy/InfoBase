@@ -5,7 +5,7 @@ import { Navbar, Info } from "@/components";
 const marketplace = () => {
   return (
     <div>
-      <Navbar />
+      <Navbar explore />
 
       <div>
         <div className='drawer drawer-mobile pt-[20px] nav-h'>
@@ -13,14 +13,13 @@ const marketplace = () => {
 
           <div className='drawer-content flex flex-col p-[30px] pt-0 mt-[20px]'>
             <p className='text-[#c3073f] text-[37px] mb-[20px] font-medium'>
-              Public
+              Video Jam
             </p>
 
             <Info />
           </div>
 
-          <div className='drawer-side ml-[20px]'>
-            {/* <label htmlFor='my-drawer-2' className='drawer-overlay'></label> */}
+          {/*<div className='drawer-side ml-[20px]'>
             <ul className='menu p-4 w-[250px] h-[600px] mt-[20px] rounded-[20px] bg-[#4e4e50] text-[#1a1a1d] font-medium'>
               <li>
                 <a className='active:bg-transparent active:text-[#1a1a1d] hover:text-[#ff0033]'>
@@ -52,7 +51,7 @@ const marketplace = () => {
                 </a>
               </li>
             </ul>
-          </div>
+          </div>*/}
         </div>
       </div>
     </div>

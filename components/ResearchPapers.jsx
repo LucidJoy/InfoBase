@@ -26,13 +26,13 @@ const ResearchPapers = ({key, myKey, element}) => {
       <div className="flex flex-col justify-start p-[15px] gap-[5px]">
         <p className="font-semibold text-[16px] text-white">
           Profile ID:{" "}
-          <span className="text-[14px] font-normal text-[#A5ACBA]">
+          <span className="text-[14px] font-semibold text-[#ef3cff]">
             {Number(element.profileId._hex)}
           </span>
         </p>
         <p className="font-semibold text-[16px] text-white">
           Address:{" "}
-          <span className="text-[14px] font-normal text-[#A5ACBA]">
+          <span className="text-[14px] text-[#3eecff] font-semibold">
             {shortenAddress(element.researcher)}
           </span>
         </p>

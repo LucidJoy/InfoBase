@@ -58,6 +58,7 @@ const Researcher = ({ key, myKey, element }) => {
   };
 
   const handleVote = async () => {
+    console.log(myKey);
     const res = await vote(myKey);
     console.log(`Vote to ${myKey} is ${res}`);
   };
@@ -72,7 +73,7 @@ const Researcher = ({ key, myKey, element }) => {
       </div>
 
       <div className="absolute w-full h-full rounded-[15px] overflow-hidden">
-        <div className="h-[45px] w-[45px] rounded-full bg-white ml-[10px] mt-[10px]">
+        <div className="h-[45px] w-[45px] rounded-full bg-[#3edcff] ml-[10px] mt-[10px]">
           <Image
             src={profilePictures[myKey - 1]}
             className="rounded-full h-[45px] w-[45px]"
@@ -82,13 +83,13 @@ const Researcher = ({ key, myKey, element }) => {
         <div className="flex flex-col justify-start p-[15px] gap-[5px]">
           <p className="font-semibold text-[16px] text-white">
             Profile ID:{" "}
-            <span className="text-[14px] font-normal text-[#A5ACBA]">
+            <span className="text-[14px] font-semibold text-[#ef3cff]">
               {myKey}
             </span>
           </p>
           <p className="font-semibold text-[16px] text-white">
             Address:{" "}
-            <span className="text-[14px] font-normal text-[#A5ACBA]">
+            <span className="text-[14px] text-[#3eecff] font-semibold">
               {shortenAddress(element.researcher)}
             </span>
           </p>
