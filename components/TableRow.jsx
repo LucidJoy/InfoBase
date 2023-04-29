@@ -14,7 +14,9 @@ const TableRow = ({ key, myKey, element }) => {
   const [amount, setAmount] = useState(0);
 
   const handleFund = () => {
-    console.log(myKey);
+    if (myKey === Number(element.id._hex)) {
+      setLeaderboardFund(!leaderboardFund);
+    }
   };
 
   const handleContribute = () => {

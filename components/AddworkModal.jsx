@@ -1,15 +1,47 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import lighthouse from "@lighthouse-web3/sdk";
 
 import CreateMeetContext from "@/context/MeetContext";
 
 const AddworkModal = () => {
-  const { toggleAddworkModal, currentProfile, setToggleAddworkModal, addWork, workForm, setWorkForm } =
-    useContext(CreateMeetContext);
+  const {
+    toggleAddworkModal,
+    currentProfile,
+    setToggleAddworkModal,
+    addWork,
+    workForm,
+    setWorkForm,
+  } = useContext(CreateMeetContext);
 
-    const handleAddWork = async () => {
-      await addWork(workForm, currentProfile.researcherId, currentProfile.researcherAddress);
-      setToggleAddworkModal(false);
-    }
+  const handleAddWork = async () => {
+    await addWork(
+      workForm,
+      currentProfile.researcherId,
+      currentProfile.researcherAddress
+    );
+    setToggleAddworkModal(false);
+  };
+
+  const [file, setFile] = useState("");
+
+  const progressCallback = (progressData) => {
+    let percentageDone =
+      100 - (progressData?.total / progressData?.uploaded)?.toFixed(2);
+    console.log(percentageDone);
+  };
+
+  const uploadFile = async (e) => {
+    const output = await lighthouse.upload(
+      file,
+      "0b3c3932.48efe20e0ff742b9971d2d2c40947539",
+      progressCallback
+    );
+    console.log("File Status:", output);
+
+    console.log(
+      "Visit at https://gateway.lighthouse.storage/ipfs/" + output.data.Hash
+    );
+  };
 
   return (
     <div className='w-[500px] h-[300px] bg-[#1a1a1d] border border-[#313134] rounded-[20px] text-white flex flex-col items-start justify-between z-30 p-[20px] relative'>
@@ -72,7 +104,7 @@ const AddworkModal = () => {
         </p>
         <p className='font-semibold text-[18px] text-[#c3073f] flex items-center gap-[8px]'>
           Upload file:
-          <input
+          {/* <input
             type='file'
             id='uploadFile'
             min={1}
@@ -81,14 +113,18 @@ const AddworkModal = () => {
             onChange={(e) =>
               setWorkForm({ ...workForm, uploadFile: e.target.value })
             }
-          />
+          /> */}
+          <input onChange={(e) => setFile(e.target.value)} type='file' />
         </p>
+
+        <button onClick={() => console.log(file)}>show</button>
       </div>
 
       <div className='flex items-center justify-center w-full'>
         <button
           className='btn bg-[#c3073f] text-[#1a1a1d] text-[15px] px-[50px] hover:bg-[#b00639] -mt-[0px]'
-          onClick={() => handleAddWork()}
+          // onClick={() => handleAddWork()}
+          onClick={() => uploadFile()}
         >
           Upload
         </button>

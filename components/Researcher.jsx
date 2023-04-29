@@ -30,17 +30,18 @@ const Researcher = ({ key, myKey, element }) => {
   };
 
   return (
-    <div className="flex relative flex-col items-center justify-center w-[250px] h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]">
-      <div className="absolute right-[20px] top-[20px] border border-gray-700 glassmorphism cursor-pointer z-[20] p-[10px] rounded-[10px]">
-        <Image src={arr_up} width={20} height={20} />
+    <div className='flex relative flex-col items-center justify-center min-w-[250px] h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]'>
+      <div className='absolute right-[20px] top-[20px] border border-gray-700 glassmorphism cursor-pointer z-[20] p-[10px] rounded-[10px] flex items-center gap-[2px] hover:border-gray-500 transition-all duration-150 ease-in-out'>
+        <p className='text-[16px] font-semibold'>3</p>
+        <Image src={arr_up} width={16} height={16} />
       </div>
 
-      <div className="absolute w-full h-full rounded-[15px] overflow-hidden opacity-30 blur">
-        <Image src={pattern} className="select-none" />
+      <div className='absolute w-full h-full rounded-[15px] overflow-hidden opacity-30 blur'>
+        <Image src={pattern} className='select-none' />
       </div>
 
       <button
-        className="absolute bottom-[10px] text-[#747477] border-2 px-[20px] py-[5px] rounded-[8px] border-[#c3073f] text-[15px] hover:scale-110 hover:bg-[#c3073f] hover:text-[#1a1a1d] transition-all duration-150 ease-in-out font-medium"
+        className='absolute bottom-[10px] text-[#747477] border-2 px-[20px] py-[5px] rounded-[8px] border-[#c3073f] text-[15px] hover:scale-110 hover:bg-[#c3073f] hover:text-[#1a1a1d] transition-all duration-150 ease-in-out font-medium'
         onClick={() => handleJoin()}
       >
         JOIN

@@ -45,12 +45,13 @@ const explore = () => {
 
             <button
               className='text-[#747477] border-2 px-[20px] py-[5px] rounded-[8px] border-[#c3073f] text-[15px] hover:scale-110 hover:bg-[#c3073f] hover:text-[#1a1a1d] transition-all duration-150 ease-in-out font-medium'
-              onClick={() => setToggleAddworkModal(true)}
+              onClick={() => router.push("https://info-basee.vercel.app/")}
             >
               Add Work +
             </button>
           </div>
-          <div className='flex space-x-8'>
+
+          <div className='flex space-x-8 pb-[15px] w-[calc(100vw-100px)] overflow-x-scroll'>
             {exploreResearchers?.map((element, i) => {
               // console.log("Researcher: ",Number(element.id._hex));
               return (
@@ -58,7 +59,7 @@ const explore = () => {
                   key={i}
                   myKey={Number(element.id._hex)}
                   element={element}
-                ></Researcher>
+                />
               );
             })}
 
@@ -86,14 +87,14 @@ const explore = () => {
           <p className='text-[#c3073f] text-[25px] mb-[20px] font-medium'>
             Research Papers
           </p>
-          <div className='flex space-x-8'>
+          <div className='flex space-x-8 pb-[15px] w-[calc(100vw-100px)] overflow-x-scroll'>
             {exploreResearchPapers?.map((element, i) => {
               return (
                 <ResearchPapers
                   key={i}
                   myKey={Number(element.id._hex)}
                   element={element}
-                ></ResearchPapers>
+                />
               );
             })}
           </div>
