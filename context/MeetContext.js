@@ -69,6 +69,12 @@ export const CreateMeetProvider = ({ children }) => {
     tokenAddress: "",
   });
 
+  const [currResearcherId, setCurrResearcherId] = useState(0);
+  const [currPaper, setCurrPaper] = useState({});
+  const [currentSuggestionsIds, setCurrentSuggestionsIds] = useState([]);
+  const [currentSuggestionsSim, setCurrentSuggestionsSim] = useState([]);
+  const [currentSuggestions, setCurrentSuggestions] = useState([]);
+
   const router = useRouter();
 
   const storeFiles = async (files) => {
@@ -656,6 +662,30 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
+  // getResearcherById
+  const getResearchPaperById = async (paperId) => {
+    try {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        meetSciContractAddress,
+        meetSciAbi,
+        signer
+      );
+
+      const txRes = await contract.getPaperById(paperId);
+
+      console.log(txRes);
+      return txRes;
+    } catch (error) {
+      alert("Some error");
+      console.log(error);
+    }
+  };
+
   // Pool
   const depositToMainPool = async (amount) => {
     let user;
@@ -884,6 +914,17 @@ export const CreateMeetProvider = ({ children }) => {
         uploadFile,
         storeFiles,
         getProfileById,
+        getResearchPaperById,
+        currResearcherId,
+        setCurrResearcherId,
+        currPaper,
+        setCurrPaper,
+        currentSuggestionsIds,
+        setCurrentSuggestionsIds,
+        currentSuggestionsSim,
+        setCurrentSuggestionsSim,
+        currentSuggestions,
+        setCurrentSuggestions,
       }}
     >
       {children}
