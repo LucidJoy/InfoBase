@@ -50,7 +50,7 @@ const explore = () => {
               Add Work +
             </button>
           </div>
-          <div className='flex space-x-8'>
+          <div className='flex flex-wrap space-x-4 space-y-4'>
             {exploreResearchers?.map((element, i) => {
               // console.log("Researcher: ",Number(element.id._hex));
               return (
@@ -86,7 +86,7 @@ const explore = () => {
           <p className='text-[#c3073f] text-[25px] mb-[20px] font-medium'>
             Research Papers
           </p>
-          <div className='flex space-x-8'>
+          <div className='flex flex-wrap space-x-4 space-y-4'>
             {exploreResearchPapers?.map((element, i) => {
               return (
                 <ResearchPapers

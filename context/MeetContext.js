@@ -10,12 +10,12 @@ import { ethers, utils } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 import lighthouse, { upload } from "@lighthouse-web3/sdk";
-import { Web3Storage } from 'web3.storage'
+import { Web3Storage } from "web3.storage";
 
 const CreateMeetContext = createContext({});
 
 const meetSciContractAddress = "0x8cdba4cB129664CeD2a271a818BB7F94B0ff86da";
-const nftContractAddress = "0xE65a35704e6DdF2b93caBBa149F917694B4d4dC0";
+const nftContractAddress = "0x4d8B7c0b212826cA116EC6F6dD43dC935EF098B2";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
 const tokenDeployerAddress = "0x57C304C2893EF70130cdDbf6ba40adf82605f588";
 const poolAddress = "0x82c226fE07EffBe67D5A0B1C5003386CF0dc15fA";
@@ -27,11 +27,12 @@ const tokenAbi = token.abi;
 const tokenDeployerAbi = tokenDeployer.abi;
 const poolAbi = pool.abi;
 
-
-function makeStorageClient () {
-  return new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGQ5RTNjMTkxMThiODkzY2RGNTU1MzI3QTREODBCYTZFOEE3NGMwMzgiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODI2ODMyMDY0MDAsIm5hbWUiOiJJbmZvQmFzZSJ9.ZEVAErCprVgw0mehsGzxZb6GlEP1pW_fwj-tRTUl2_I" })
+function makeStorageClient() {
+  return new Web3Storage({
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGQ5RTNjMTkxMThiODkzY2RGNTU1MzI3QTREODBCYTZFOEE3NGMwMzgiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODI2ODMyMDY0MDAsIm5hbWUiOiJJbmZvQmFzZSJ9.ZEVAErCprVgw0mehsGzxZb6GlEP1pW_fwj-tRTUl2_I",
+  });
 }
-
 
 export const CreateMeetProvider = ({ children }) => {
   const [address, setAddress] = useState("");
@@ -71,11 +72,11 @@ export const CreateMeetProvider = ({ children }) => {
   const router = useRouter();
 
   const storeFiles = async (files) => {
-    const client = makeStorageClient()
-    const cid = await client.put(files)
-    console.log('stored files with cid:', cid)
-    return cid
-  }
+    const client = makeStorageClient();
+    const cid = await client.put(files);
+    console.log("stored files with cid:", cid);
+    return cid;
+  };
 
   const progressCallback = (progressData) => {
     let percentageDone =
@@ -260,30 +261,41 @@ export const CreateMeetProvider = ({ children }) => {
 
   const mintNFT = async () => {
     let receiver;
-    if (window.ethereum) {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+    try {
+      if (window.ethereum) {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
 
-      const contract = new ethers.Contract(nftContractAddress, nftAbi, signer);
+        const contract = new ethers.Contract(
+          nftContractAddress,
+          nftAbi,
+          signer
+        );
 
-      if (ethereum.isConnected()) {
-        const accounts = await window.ethereum.request({
-          method: "eth_accounts",
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          console.log(accounts[0]);
+          receiver = accounts[0];
+        }
+
+        let mintingPrice = utils.parseEther("1.0");
+
+        const txRes = await contract.safeMint(receiver, {
+          value: mintingPrice,
+          gasLimit: 500000000,
         });
-        console.log(accounts[0]);
-        receiver = accounts[0];
+
+        await txRes.wait();
+
+        console.log(txRes);
+        return true;
       }
-
-      const txRes = await contract.safeMint(receiver, {
-        gasLimit: 500000000,
-      });
-
-      await txRes.wait();
-
-      console.log(txRes);
-      return txRes;
+    } catch (error) {
+      alert("Error while minting NFT!")
     }
   };
 
@@ -359,7 +371,7 @@ export const CreateMeetProvider = ({ children }) => {
       await txRes.wait(1);
 
       console.log(txRes);
-      return txRes;
+      return true;
     }
   };
 
@@ -410,10 +422,10 @@ export const CreateMeetProvider = ({ children }) => {
         gasLimit: 500000000,
       });
 
-      setLoading(true);
       await txRes.wait(1);
-      setLoading(false);
       console.log(txRes);
+
+      return true;
     }
   };
 
@@ -845,7 +857,7 @@ export const CreateMeetProvider = ({ children }) => {
         matchingValue,
         getDonationPerResearcher,
         uploadFile,
-        storeFiles
+        storeFiles,
       }}
     >
       {children}
