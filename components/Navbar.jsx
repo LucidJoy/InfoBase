@@ -12,7 +12,7 @@ const Navbar = ({ funding, explore }) => {
         className='text-white py-[10px] cursor-pointer'
         onClick={() => router.push("/")}
       >
-        MeetSci
+        InfoBase
       </div>
 
       {funding && (

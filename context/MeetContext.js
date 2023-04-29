@@ -9,14 +9,16 @@ import token from "./Token.json";
 import { ethers, utils } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
+import lighthouse, { upload } from "@lighthouse-web3/sdk";
+import { Web3Storage } from "web3.storage";
 
 const CreateMeetContext = createContext({});
 
 const meetSciContractAddress = "0x8cdba4cB129664CeD2a271a818BB7F94B0ff86da";
-const nftContractAddress = "0xE65a35704e6DdF2b93caBBa149F917694B4d4dC0";
+const nftContractAddress = "0x4d8B7c0b212826cA116EC6F6dD43dC935EF098B2";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
 const tokenDeployerAddress = "0x57C304C2893EF70130cdDbf6ba40adf82605f588";
-const poolAddress = "0x82c226fE07EffBe67D5A0B1C5003386CF0dc15fA";
+const poolAddress = "0x5c152C29FCd928fDAA49852B21b5b9BEe1b12d98";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
@@ -24,6 +26,13 @@ const accessListAbi = acl.abi;
 const tokenAbi = token.abi;
 const tokenDeployerAbi = tokenDeployer.abi;
 const poolAbi = pool.abi;
+
+function makeStorageClient() {
+  return new Web3Storage({
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGQ5RTNjMTkxMThiODkzY2RGNTU1MzI3QTREODBCYTZFOEE3NGMwMzgiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODI2ODMyMDY0MDAsIm5hbWUiOiJJbmZvQmFzZSJ9.ZEVAErCprVgw0mehsGzxZb6GlEP1pW_fwj-tRTUl2_I",
+  });
+}
 
 export const CreateMeetProvider = ({ children }) => {
   const [address, setAddress] = useState("");
@@ -61,6 +70,51 @@ export const CreateMeetProvider = ({ children }) => {
   });
 
   const router = useRouter();
+
+  const storeFiles = async (files) => {
+    const client = makeStorageClient();
+    const cid = await client.put(files);
+    console.log("stored files with cid:", cid);
+    return cid;
+  };
+
+  const progressCallback = (progressData) => {
+    let percentageDone =
+      100 - (progressData?.total / progressData?.uploaded)?.toFixed(2);
+    console.log(percentageDone);
+  };
+
+  const uploadFile = async (e) => {
+    // Push file to lighthouse node
+    // Both file and folder are supported by upload function
+    try {
+      e.persist();
+      console.log("Lighthouse object: ", lighthouse);
+
+      // const output = await lighthouse.upload(e,"0b3c3932.48efe20e0ff742b9971d2d2c40947539",progressCallback);
+      const output = await upload(
+        e,
+        "0b3c3932.48efe20e0ff742b9971d2d2c40947539",
+        progressCallback
+      );
+      console.log("File Status:", output);
+      /*
+        output:
+          data: {
+            Name: "filename.txt",
+            Size: 88000,
+            Hash: "QmWNmn2gr4ZihNPqaC5oTeePsHvFtkWNpjY3cD6Fd5am1w"
+          }
+        Note: Hash in response is CID.
+      */
+
+      console.log(
+        "Visit at https://gateway.lighthouse.storage/ipfs/" + output.data.Hash
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -207,30 +261,41 @@ export const CreateMeetProvider = ({ children }) => {
 
   const mintNFT = async () => {
     let receiver;
-    if (window.ethereum) {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+    try {
+      if (window.ethereum) {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
 
-      const contract = new ethers.Contract(nftContractAddress, nftAbi, signer);
+        const contract = new ethers.Contract(
+          nftContractAddress,
+          nftAbi,
+          signer
+        );
 
-      if (ethereum.isConnected()) {
-        const accounts = await window.ethereum.request({
-          method: "eth_accounts",
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          console.log(accounts[0]);
+          receiver = accounts[0];
+        }
+
+        let mintingPrice = utils.parseEther("1.0");
+
+        const txRes = await contract.safeMint(receiver, {
+          value: mintingPrice,
+          gasLimit: 500000000,
         });
-        console.log(accounts[0]);
-        receiver = accounts[0];
+
+        await txRes.wait();
+
+        console.log(txRes);
+        return true;
       }
-
-      const txRes = await contract.safeMint(receiver, {
-        gasLimit: 500000000,
-      });
-
-      await txRes.wait();
-
-      console.log(txRes);
-      return txRes;
+    } catch (error) {
+      alert("Error while minting NFT!")
     }
   };
 
@@ -306,7 +371,7 @@ export const CreateMeetProvider = ({ children }) => {
       await txRes.wait(1);
 
       console.log(txRes);
-      return txRes;
+      return true;
     }
   };
 
@@ -357,10 +422,10 @@ export const CreateMeetProvider = ({ children }) => {
         gasLimit: 500000000,
       });
 
-      setLoading(true);
       await txRes.wait(1);
-      setLoading(false);
       console.log(txRes);
+
+      return true;
     }
   };
 
@@ -422,7 +487,7 @@ export const CreateMeetProvider = ({ children }) => {
 
   // 7. Add work to profile
   const addWork = async (
-    { title, description, department },
+    { title, description, department, uploadFile },
     profileId,
     researcherAddress
 
@@ -446,7 +511,7 @@ export const CreateMeetProvider = ({ children }) => {
         title,
         description,
         department,
-        "fileUri",
+        uploadFile,
         {
           gasLimit: 500000000,
         }
@@ -455,6 +520,7 @@ export const CreateMeetProvider = ({ children }) => {
       await txRes.wait(1);
 
       console.log(txRes);
+      return true;
     }
   };
 
@@ -568,6 +634,26 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
+  // getResearcherById
+  const getProfileById = async (profileId) => {
+    try {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(meetSciContractAddress, meetSciAbi, signer);
+
+      const txRes = await contract.getResearcherProfileById(profileId);
+
+      console.log(txRes);
+      return txRes;
+    } catch (error) {
+      alert("Some error");
+      console.log(error);
+    }
+  }
+
   // Pool
   const depositToMainPool = async (amount) => {
     let user;
@@ -605,7 +691,7 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
-  const fundProfile = async (researcher, donor, amount) => {
+  const fundProfile = async (researcher, amount) => {
     let user;
 
     if (window.ethereum) {
@@ -624,7 +710,9 @@ export const CreateMeetProvider = ({ children }) => {
 
         const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
 
-        const txRes = await poolContract.fundResearcher(researcher, donor, {
+        amount = utils.parseEther(amount.toString())
+
+        const txRes = await poolContract.fundResearcher(researcher, user, {
           value: amount,
           gasLimit: 5000000000,
         });
@@ -635,6 +723,7 @@ export const CreateMeetProvider = ({ children }) => {
         return true;
       } catch (error) {
         alert("Funding error");
+        console.log(error);
       }
     }
   };
@@ -790,6 +879,9 @@ export const CreateMeetProvider = ({ children }) => {
         depositToMainPool,
         matchingValue,
         getDonationPerResearcher,
+        uploadFile,
+        storeFiles,
+        getProfileById
       }}
     >
       {children}

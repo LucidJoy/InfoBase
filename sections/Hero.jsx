@@ -9,9 +9,9 @@ const Hero = () => {
         <Card btnName='Continue as Researcher' />
       </div>
 
-      <div className='flex-1 flex items-center justify-center'>
+      {/* <div className='flex-1 flex items-center justify-center'>
         <Card btnName='Continue as Scholar' />
-      </div>
+      </div> */}
     </div>
   );
 };

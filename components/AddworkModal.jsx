@@ -3,6 +3,8 @@ import lighthouse from "@lighthouse-web3/sdk";
 
 import CreateMeetContext from "@/context/MeetContext";
 
+const LIGHT_HOUSE_API_KEY = "0b3c3932.48efe20e0ff742b9971d2d2c40947539";
+
 const AddworkModal = () => {
   const {
     toggleAddworkModal,
@@ -11,18 +13,18 @@ const AddworkModal = () => {
     addWork,
     workForm,
     setWorkForm,
+    storeFiles,
   } = useContext(CreateMeetContext);
 
   const handleAddWork = async () => {
-    await addWork(
+    const res = await addWork(
       workForm,
       currentProfile.researcherId,
       currentProfile.researcherAddress
     );
+    console.log("Added work: ", res);
     setToggleAddworkModal(false);
   };
-
-  const [file, setFile] = useState("");
 
   const progressCallback = (progressData) => {
     let percentageDone =
@@ -31,12 +33,28 @@ const AddworkModal = () => {
   };
 
   const uploadFile = async (e) => {
+    // Push file to lighthouse node
+    // Both file and folder are supported by upload function
+    e.persist();
+    console.log("Lighthouse object: ", lighthouse);
+
     const output = await lighthouse.upload(
-      file,
+      e,
       "0b3c3932.48efe20e0ff742b9971d2d2c40947539",
       progressCallback
     );
     console.log("File Status:", output);
+    /*
+      output:
+        data: {
+          Name: "filename.txt",
+          Size: 88000,
+          Hash: "QmWNmn2gr4ZihNPqaC5oTeePsHvFtkWNpjY3cD6Fd5am1w"
+        }
+      Note: Hash in response is CID.
+    */
+
+    setWorkForm({ ...workForm, uploadFile: link });
 
     console.log(
       "Visit at https://gateway.lighthouse.storage/ipfs/" + output.data.Hash
@@ -104,17 +122,16 @@ const AddworkModal = () => {
         </p>
         <p className='font-semibold text-[18px] text-[#c3073f] flex items-center gap-[8px]'>
           Upload file:
-          {/* <input
+          <input
             type='file'
             id='uploadFile'
             min={1}
             placeholder='Enter upload file'
             className='w-[300px] px-[10px] py-[5px] rounded-[5px] outline-none bg-[#1a1a1d] text-white font-normal text-[16px] placeholder:text-[#ffffff48]'
-            onChange={(e) =>
-              setWorkForm({ ...workForm, uploadFile: e.target.value })
-            }
-          /> */}
-          <input onChange={(e) => setFile(e.target.value)} type='file' />
+            onChange={(e) => {
+              setWorkForm({ ...workForm, uploadFile: e.target.value });
+            }}
+          />
         </p>
 
         <button onClick={() => console.log(file)}>show</button>
@@ -123,8 +140,7 @@ const AddworkModal = () => {
       <div className='flex items-center justify-center w-full'>
         <button
           className='btn bg-[#c3073f] text-[#1a1a1d] text-[15px] px-[50px] hover:bg-[#b00639] -mt-[0px]'
-          // onClick={() => handleAddWork()}
-          onClick={() => uploadFile()}
+          onClick={() => handleAddWork()}
         >
           Upload
         </button>

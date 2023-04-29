@@ -50,8 +50,7 @@ const explore = () => {
               Add Work +
             </button>
           </div>
-
-          <div className='flex space-x-8 pb-[15px] w-[calc(100vw-100px)] overflow-x-scroll'>
+          <div className='flex flex-wrap space-x-4 space-y-4'>
             {exploreResearchers?.map((element, i) => {
               // console.log("Researcher: ",Number(element.id._hex));
               return (
@@ -100,6 +99,9 @@ const explore = () => {
           </div>
         </div>
       </div>
+      {/* <video controls autoplay name="media">
+    <source src="https://gateway.lighthouse.storage/ipfs/QmdQN5R6F8mU4X8qZ3bUXCnCRNKCeaRZ1L2YjPKrbaEmh8" type="video/webm"/>
+  </video> */}
     </div>
   );
 };

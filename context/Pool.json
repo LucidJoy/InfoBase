@@ -11,12 +11,12 @@
             "inputs": [
                 {
                     "internalType": "address[]",
-                    "name": "_to",
+                    "name": "researchers",
                     "type": "address[]"
                 },
                 {
                     "internalType": "uint256[]",
-                    "name": "_poolFraction",
+                    "name": "amounts",
                     "type": "uint256[]"
                 }
             ],
@@ -34,13 +34,20 @@
                 },
                 {
                     "internalType": "address",
-                    "name": "_donor",
+                    "name": "_user",
                     "type": "address"
                 }
             ],
             "name": "fundResearcher",
             "outputs": [],
             "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "transactAllFunds",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
@@ -55,19 +62,6 @@
         {
             "stateMutability": "payable",
             "type": "receive"
-        },
-        {
-            "inputs": [],
-            "name": "admin",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
         },
         {
             "inputs": [
@@ -89,13 +83,24 @@
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "getContractbalance",
-            "outputs": [
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                },
                 {
                     "internalType": "uint256",
                     "name": "",
                     "type": "uint256"
+                }
+            ],
+            "name": "donors",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
                 }
             ],
             "stateMutability": "view",
@@ -135,7 +140,7 @@
         },
         {
             "inputs": [],
-            "name": "poolBalance",
+            "name": "getTotalPoolBalance",
             "outputs": [
                 {
                     "internalType": "uint256",
@@ -154,36 +159,12 @@
                     "type": "address"
                 }
             ],
-            "name": "totalAmountRaisedByResearcher",
+            "name": "totalDonation",
             "outputs": [
                 {
                     "internalType": "uint256",
                     "name": "",
                     "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "name": "usersVotedForResearcher",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
                 }
             ],
             "stateMutability": "view",
