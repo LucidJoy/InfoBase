@@ -8,22 +8,31 @@ const TableRow = ({ key, myKey, element }) => {
     setLeaderboardFund,
     getTotalNumberOfDonors,
     getDonationPerResearcher,
+    getProfileById,
+    fundProfile
   } = useContext(CreateMeetContext);
 
   const [numberOf, setNumberOf] = useState(0);
   const [amount, setAmount] = useState(0);
 
-  const handleFund = () => {
-    if (myKey === Number(element.id._hex)) {
-      setLeaderboardFund(!leaderboardFund);
-    }
+  const [researcherDonationAmt, setResearcherDonationAmt] = useState(0);
+  const [researcherAddr, setResearcherAddr] = useState('');
+
+  const handleDonation = async (e) => {
+    console.log(`Donation to ${myKey} value: ${e.target.value}`);
+    setResearcherDonationAmt(e.target.value);
+
+    const response = await getProfileById(myKey);
+    console.log("Profile clicked: ", response);
+
+    setResearcherAddr(response.researcher);
   }
 
-  const handleContribute = () => {
-    // if (myKey === Number(element.id._hex)) {
-    //   setLeaderboardFund(!leaderboardFund);
-    // }
-    console.log(myKey);
+  const handleContribute = async () => {
+    console.log("Donation to researcher no. :", myKey);
+    const response = await fundProfile(researcherAddr, researcherDonationAmt);
+
+
   };
 
   useEffect(() => {
@@ -53,30 +62,12 @@ const TableRow = ({ key, myKey, element }) => {
         <td className='px-[20px]'>{numberOf}</td>
         <td className='px-[20px]'>{amount} tFil</td>
         <td
-          className='px-[20px] cursor-pointer text-[#fee15d] font-semibold'
-          onClick={() => handleContribute()}
+          className='px-[20px] cursor-pointer '
         >
-          FUND
+          <input type="integer" className="w-20 mr-2 ml-3 pl-1" onChange={(e) => handleDonation(e)}/>
+          <span className="text-[#fee15d] font-semibold" onClick={() => handleContribute()}>FUND</span>
         </td>
       </tr>
-
-      {leaderboardFund && (
-        <div className='absolute w-fit h-fit p-[20px] bg-[#27272A] border border-gray-700 top-[500px] right-[150px] rounded-[10px]'>
-          <div className='flex flex-col items-center gap-[20px]'>
-            <input
-              type='number'
-              className='px-[10px] py-[8px] outline-none rounded-[5px]'
-            />
-
-            <button
-              className='bg-[#950740] text-[#1a1a1d] w-fit px-[30px] py-[5px] rounded-[5px] font-semibold uppercase transition-all duration-150 ease-in-out hover:bg-[#7b0534] hover:text-white text-[14px]'
-              onClick={() => handleFund()}
-            >
-              Fund
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 };

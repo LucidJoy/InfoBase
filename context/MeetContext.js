@@ -18,7 +18,7 @@ const meetSciContractAddress = "0x8cdba4cB129664CeD2a271a818BB7F94B0ff86da";
 const nftContractAddress = "0x4d8B7c0b212826cA116EC6F6dD43dC935EF098B2";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
 const tokenDeployerAddress = "0x57C304C2893EF70130cdDbf6ba40adf82605f588";
-const poolAddress = "0x82c226fE07EffBe67D5A0B1C5003386CF0dc15fA";
+const poolAddress = "0x5c152C29FCd928fDAA49852B21b5b9BEe1b12d98";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
@@ -634,6 +634,26 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
+  // getResearcherById
+  const getProfileById = async (profileId) => {
+    try {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(meetSciContractAddress, meetSciAbi, signer);
+
+      const txRes = await contract.getResearcherProfileById(profileId);
+
+      console.log(txRes);
+      return txRes;
+    } catch (error) {
+      alert("Some error");
+      console.log(error);
+    }
+  }
+
   // Pool
   const depositToMainPool = async (amount) => {
     let user;
@@ -671,7 +691,7 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
-  const fundProfile = async (researcher, donor, amount) => {
+  const fundProfile = async (researcher, amount) => {
     let user;
 
     if (window.ethereum) {
@@ -690,6 +710,8 @@ export const CreateMeetProvider = ({ children }) => {
 
         const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
 
+        amount = utils.parseEther(amount.toString())
+
         const txRes = await poolContract.fundResearcher(researcher, user, {
           value: amount,
           gasLimit: 5000000000,
@@ -701,6 +723,7 @@ export const CreateMeetProvider = ({ children }) => {
         return true;
       } catch (error) {
         alert("Funding error");
+        console.log(error);
       }
     }
   };
@@ -858,6 +881,7 @@ export const CreateMeetProvider = ({ children }) => {
         getDonationPerResearcher,
         uploadFile,
         storeFiles,
+        getProfileById
       }}
     >
       {children}
