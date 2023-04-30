@@ -1,11 +1,40 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { shortenAddress } from "@/utils/shortenAddr";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
+
+import CreateMeetContext from "@/context/MeetContext";
 
 const ResearchPapers = ({ key, myKey, element }) => {
+  const {
+    getResearchPaperById,
+    currentSuggestionsIds,
+    setCurrentSuggestionsIds,
+    currentSuggestionsSim,
+    setCurrentSuggestionsSim,
+    currentSuggestions,
+    setCurrentSuggestions,
+    currResearcherId,
+    setCurrResearcherId,
+    currPaper,
+    setCurrPaper,
+  } = useContext(CreateMeetContext);
+  const [id, setId] = useState(0);
+
+  const router = useRouter();
+
   const handleInfo = async () => {
     console.log(myKey);
+    console.log("Research paper ID: ", Number(element.id._hex));
+    console.log("hello");
+
+    setCurrResearcherId(myKey);
+
+    const response = await getResearchPaperById(myKey);
+    console.log("Current paper: ", response);
+
+    setCurrPaper(response);
 
     const res = await axios({
       method: "get",
@@ -18,7 +47,32 @@ const ResearchPapers = ({ key, myKey, element }) => {
     });
     // const res = await axios(`https://infobase.onrender.com/docs_info/${myKey}`);
     console.log(`API response for ${myKey} is `, res.data);
+
+    const suggests = [];
+
+    for (let i = 0; i < res.data.docs.length; i++) {
+      let id = Number(res.data.docs[i]);
+      console.log("IDs ", id);
+      let temp = await getResearchPaperById(id);
+
+      suggests.push(temp);
+    }
+
+    console.log("Temp suggests: ", suggests);
+
+    setCurrentSuggestions(suggests);
+
+    setCurrentSuggestionsIds(res.data.docs);
+    setCurrentSuggestionsSim(res.data.sim);
+
+    router.push("/info");
   };
+
+  let el;
+
+  useEffect(() => {
+    setId(Number(element.id._hex));
+  }, []);
 
   return (
     <div className='relative min-w-[250px] max-w-[250px]  h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]'>
@@ -27,12 +81,14 @@ const ResearchPapers = ({ key, myKey, element }) => {
           Profile ID:{" "}
           <span className='text-[14px] font-semibold text-[#ef3cff]'>
             {/* {element && Number(element)} */}
+            {Number(element.id._hex)}
           </span>
         </p>
         <p className='font-semibold text-[16px] text-white'>
           Address:{" "}
           <span className='text-[14px] text-[#3eecff] font-semibold'>
             {/* {element && shortenAddress(element.researcher)} */}
+            {shortenAddress(element.researcher)}
           </span>
         </p>
         <p className='font-semibold text-[16px] text-white'>
@@ -63,12 +119,7 @@ const ResearchPapers = ({ key, myKey, element }) => {
           }}
           className='flex items-center justify-center'
         >
-          <button
-            className='absolute bottom-[10px] text-[#747477] border-2 px-[20px] py-[5px] rounded-[8px] border-[#c3073f] text-[15px] hover:scale-110 hover:bg-[#c3073f] hover:text-[#1a1a1d] transition-all duration-150 ease-in-out font-medium'
-            onClick={() => handleInfo()}
-          >
-            INFO
-          </button>
+          INFO
         </Link>
       </div>
     </div>
