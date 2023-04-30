@@ -55,12 +55,13 @@ const ResearchPapers = ({ key, myKey, element }) => {
         </p>
       </div>
 
-      <div className='flex items-center justify-center'>
+      <div className=''>
         <Link
           href={{
             pathname: `/info`,
             query: { element },
           }}
+          className='flex items-center justify-center'
         >
           <button
             className='absolute bottom-[10px] text-[#747477] border-2 px-[20px] py-[5px] rounded-[8px] border-[#c3073f] text-[15px] hover:scale-110 hover:bg-[#c3073f] hover:text-[#1a1a1d] transition-all duration-150 ease-in-out font-medium'
