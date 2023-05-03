@@ -18,7 +18,7 @@ import {
 
 import { Navbar, SubscriberCard } from "@/components";
 import CreateMeetContext from "@/context/MeetContext";
-import { pattern } from "@/assets";
+import { leave, mic, pattern, record, unrecord, video } from "@/assets";
 import { shortenAddress } from "@/utils/shortenAddr";
 
 const Research = ({ roomId }) => {
@@ -31,8 +31,10 @@ const Research = ({ roomId }) => {
       videoRef.current.srcObject = state.context.camStream;
   });
 
+  useEffect(() => roomId && setRoomId(roomId), []); //on clicking userecord
+
   // console.log("🏵️ ", roomId);
-  const { researchCardAddr, setResearchCardAddr, address } =
+  const { researchCardAddr, setResearchCardAddr, address, setRoomId } =
     useContext(CreateMeetContext);
 
   const { initialize, isInitialized } = useHuddle01();
@@ -52,8 +54,17 @@ const Research = ({ roomId }) => {
     stream: camStream,
   } = useVideo();
   const { joinRoom, leaveRoom } = useRoom();
-  const { startRecording, stoprecording, isStarting, inProgress, error } =
-    useRecording();
+  const {
+    startRecording,
+    stopRecording,
+    error,
+    data: recData,
+    inProgress,
+  } = useRecording();
+
+  useEffect(() => {
+    console.log("recdata -> ", { recData });
+  }, [recData]);
 
   const { peers } = usePeers();
 
@@ -74,59 +85,102 @@ const Research = ({ roomId }) => {
       <Navbar />
 
       <div className='w-full flex flex-col items-center mt-[20px] bg-[#1a1a1d]'>
-        <p className='text-[25px] text-[#c3073f] font-semibold'>
+        <p className='text-[25px] text-[#c3073f] font-semibold mb-[10px]'>
           Private Interactions
         </p>
 
-        <div className='flex flex-row gap-[50px]'>
+        <div className='flex flex-row gap-[50px] flex-wrap items-center justify-center bg-[#4e4e504b] w-[95%] rounded-[20px] py-[20px] border border-[#4e4e50]'>
           <button
-            className='btn btn-outline border-[2px] px-[30px] text-[15px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d] mt-[30px]'
+            className='btn btn-outline border-[2px] px-[20px] text-[12px] border-[#950740] text-[#c3073f] rounded-full hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d]'
             onClick={() => {
               initialize("KL1r3E1yHfcrRbXsT4mcE-3mK60Yc3YR");
-              joinLobby(roomId);
+              joinLobby("lby-gxub-hjh");
             }}
           >
             join lobby
           </button>
           <button
-            className='btn btn-outline border-[2px] px-[30px] text-[15px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d] mt-[30px]'
+            className='btn btn-outline rounded-full border-[2px]  px-[20px] text-[12px] border-[#950740] text-[#c3073f] hover:bg-[#313134] hover:border-[#950740] hover:text-[#1a1a1d]'
             onClick={fetchVideoStream}
             // disabled={!fetchVideoStream.isCallable}
           >
-            fetch video
+            <Image src={video} className='w-[24px] h-[24px] ' />
+          </button>
+          <button
+            className='btn btn-outline rounded-full border-[2px]  px-[20px] text-[12px] border-[#950740] text-[#c3073f] hover:bg-[#313134] hover:border-[#950740]'
+            onClick={fetchAudioStream}
+            // disabled={!fetchVideoStream.isCallable}
+          >
+            <Image src={mic} className='w-[24px] h-[24px] ' />
           </button>
 
           <button
-            // disabled={!produceVideo.isCallable}
-            className='btn btn-outline border-[2px] px-[30px] text-[15px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d] mt-[30px]'
-            onClick={stopVideoStream}
-          >
-            Stop video
-          </button>
-          {/* <button
-            className='btn btn-outline border-[2px] px-[30px] text-[15px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d] mt-[30px]'
-            onClick={() => fetchAudioStream()}
-            // disabled={!fetchAudioStream.isCallable}
-          >
-            fetchaudio
-          </button> */}
-          <button
-            className='btn btn-outline border-[2px] px-[30px] text-[15px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d] mt-[30px]'
+            className='btn btn-outline border-[2px] px-[20px] text-[12px] border-[#950740] text-[#c3073f] rounded-full hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d]'
             onClick={() => joinRoom()}
           >
             join room
           </button>
-          {/* <button
-            className='btn btn-outline border-[2px] px-[30px] text-[15px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d] mt-[30px]'
-            onClick={() =>
-              router.push(`https://app.huddle01.com/${roomId}/lobby`)
-            }
+
+          <button
+            // disabled={!startRecording.isCallable}
+            className='btn btn-outline rounded-full border-[2px]  px-[20px] text-[12px] border-[#950740] text-[#c3073f] hover:bg-[#313134] hover:border-[#950740]'
+            onClick={() => {
+              startRecording(`https://info-base.vercel.app/rec/${roomId}`);
+            }}
           >
-            Create meet
-          </button> */}
+            <Image src={record} className='w-[24px] h-[24px] ' />
+          </button>
+
+          <button
+            // disabled={!startRecording.isCallable}
+            className='btn btn-outline rounded-full border-[2px]  px-[20px] text-[12px] border-[#950740] text-[#c3073f] hover:bg-[#313134] hover:border-[#950740]'
+            onClick={() => stopRecording()}
+          >
+            <Image src={unrecord} className='w-[25px] h-[25px] ' />
+          </button>
+
+          <button
+            // disabled={!produceAudio.isCallable}
+            onClick={() => produceAudio(micStream)}
+            className='btn btn-outline border-[2px]  px-[20px] text-[12px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#313134] hover:text-[#1a1a1d]'
+          >
+            PRODUCE_MIC
+          </button>
+
+          <button
+            // disabled={!produceVideo.isCallable}
+            onClick={() => produceVideo(camStream)}
+            className='btn btn-outline border-[2px]  px-[20px] text-[12px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d]'
+          >
+            PRODUCE_CAM
+          </button>
+
+          <button
+            // disabled={!stopProducingAudio.isCallable}
+            onClick={() => stopProducingAudio()}
+            className='btn btn-outline border-[2px]  px-[20px] text-[12px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d]'
+          >
+            STOP_PRODUCING_MIC
+          </button>
+
+          <button
+            // disabled={!stopProducingVideo.isCallable}
+            onClick={() => stopProducingVideo()}
+            className='btn btn-outline border-[2px]  px-[20px] text-[12px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d]'
+          >
+            STOP_PRODUCING_CAM
+          </button>
+
+          <button
+            // disabled={!leaveRoom.isCall`able}
+            onClick={leaveRoom}
+            className='btn btn-outline rounded-full border-[2px]  px-[20px] text-[12px] border-[#950740] text-[#c3073f] hover:bg-[#313134] hover:border-[#950740]'
+          >
+            <Image src={leave} className='w-[24px] h-[24px]' />
+          </button>
         </div>
 
-        <div className='py-[20px]'>
+        <div className='py-[20px] flex flex-col items-center justify-center'>
           <p className='mb-[10px] font-medium text-[16px]'>
             Researcher address:
             <span className='text-white ml-[5px]'>
@@ -134,12 +188,12 @@ const Research = ({ roomId }) => {
             </span>
           </p>
           <video
-            className='rounded-[15px]'
+            className='rounded-[15px] w-[400px] mb-[30px]'
             ref={videoRef}
             autoPlay
             muted
           ></video>
-          <div className='grid grid-cols-4'>
+          <div className='flex flex-col gap-[10px] items-center justify-center'>
             {Object.values(peers)
               .filter((peer) => peer.cam)
               .map((peer) => (
@@ -148,6 +202,7 @@ const Research = ({ roomId }) => {
                   peerId={peer.peerId}
                   track={peer.cam}
                   debug
+                  className='rounded-[15px] w-[300px]'
                 />
               ))}
             {Object.values(peers)
@@ -161,22 +216,6 @@ const Research = ({ roomId }) => {
               ))}
           </div>
         </div>
-
-        {/* <p className='text-white'>{researchCardAddr}</p> */}
-
-        {/* <div className='relative w-[500px] h-[450px] bg-[#6F2232] mt-[50px] rounded-[20px]'>
-          <p className='text-[#fff] shadow-lg text-[18px] font-medium text-center py-[10px] z-20'>
-            All subscribers
-          </p> */}
-
-        {/* <div className=' px-[20px] mb-[10px] h-[380px] overflow-hidden overflow-y-scroll'> */}
-        {/* <SubscriberCard />
-            <SubscriberCard />
-            <SubscriberCard />
-            <SubscriberCard />
-            <SubscriberCard /> */}
-        {/* </div> */}
-        {/* </div> */}
       </div>
     </div>
   );

@@ -65,7 +65,7 @@ const explore = () => {
           </div>
         </div>
 
-        <div className='flex flex-col pt-[20px] mt-[70px] w-[100vw] bg-[#1a1a1d]'>
+        <div className='flex flex-col pt-[20px] mt-[70px] bg-[#1a1a1d]'>
           <p className='text-[#c3073f] text-[25px] mb-[20px] font-medium'>
             Research Papers
           </p>

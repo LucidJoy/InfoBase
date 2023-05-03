@@ -10,6 +10,13 @@ import profile_7 from "./profile_7.png";
 import profile_8 from "./profile_8.jpg";
 import profile_9 from "./profile_9.jpg";
 import profile_10 from "./profile_10.png";
+import video from "./video.svg";
+import not_video from "./not_video.svg";
+import mic_off from "./mic_off.svg";
+import mic from "./mic.svg";
+import record from "./record.svg";
+import unrecord from "./unrecord.svg";
+import leave from "./leave.svg";
 
 export {
   pattern,
@@ -23,5 +30,12 @@ export {
   profile_7,
   profile_8,
   profile_9,
-  profile_10
+  profile_10,
+  video,
+  not_video,
+  mic,
+  mic_off,
+  record,
+  unrecord,
+  leave,
 };
