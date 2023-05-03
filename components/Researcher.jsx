@@ -52,7 +52,7 @@ const Researcher = ({ key, myKey, element }) => {
       console.log("Response from joining", response);
 
       if (response) {
-        router.push("gated");
+        router.push(`private/${element.researcher}`);
       }
     }
   };
