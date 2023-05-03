@@ -118,6 +118,7 @@ const ResearchPapers = ({ key, myKey, element }) => {
             query: { element },
           }}
           className='flex items-center justify-center'
+          onClick={() => handleInfo()}
         >
           INFO
         </Link>
