@@ -5,7 +5,7 @@ import CreateMeetContext from "@/context/MeetContext";
 
 import lighthouseUpload from '../utils/fileUpload'
 
-const LIGHT_HOUSE_API_KEY = "0b3c3932.48efe20e0ff742b9971d2d2c40947539";
+const LIGHT_HOUSE_API_KEY = "f9193064.516cd9797f1b4f3eb867ec0e69cce141";
 
 const AddworkModal = () => {
   const {
@@ -26,7 +26,7 @@ const AddworkModal = () => {
 
   const uploadFile = async(e) =>{
     e.persist()
-    const output = await lighthouseUpload(e, "0b3c3932.48efe20e0ff742b9971d2d2c40947539");
+    const output = await lighthouseUpload(e, LIGHT_HOUSE_API_KEY);
     console.log('File Status:', output);
 
     const link = `https://gateway.lighthouse.storage/ipfs/${output.data.Hash}`

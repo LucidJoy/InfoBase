@@ -14,11 +14,11 @@ import lighthouse, { upload } from "@lighthouse-web3/sdk";
 
 const CreateMeetContext = createContext({});
 
-const meetSciContractAddress = "0xB5a42c5cD7C202abf1ff0d4142c4104E62062db1";
+const meetSciContractAddress = "0x699639062cE6Ce1E1DD4AE9E6675Be3cdB20e2DD";
 const nftContractAddress = "0x4d8B7c0b212826cA116EC6F6dD43dC935EF098B2";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
 const tokenDeployerAddress = "0x57C304C2893EF70130cdDbf6ba40adf82605f588";
-const poolAddress = "0x5c152C29FCd928fDAA49852B21b5b9BEe1b12d98";
+const poolAddress = "0x9f38023490eEDF6F0ACCCDa47b1393473b2C45e3";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
@@ -218,12 +218,21 @@ export const CreateMeetProvider = ({ children }) => {
   };
 
   // check nft balance
-  const checkNftBalance = async (_currentUser) => {
+  const checkNftBalance = async () => {
+    let _currentUser;
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
       const signer = provider.getSigner();
+
+      if (ethereum.isConnected()) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        console.log(accounts[0]);
+        _currentUser = accounts[0];
+      }
 
       const contract = new ethers.Contract(
         nftContractAddress,
@@ -234,7 +243,7 @@ export const CreateMeetProvider = ({ children }) => {
       console.log(address);
       const txRes = await contract.balanceOf(_currentUser);
 
-      if (txRes > 0) {
+      if (Number(txRes._hex) > 0) {
         return true;
       }
 
@@ -262,6 +271,41 @@ export const CreateMeetProvider = ({ children }) => {
   //   }
   //   console.log("Authenticated: ", authentication);
   // }, [])
+
+    // check nft balance
+    const checkIfSubscribed = async (_tokenAddress) => {
+      let _currentUser;
+      if (window.ethereum) {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+  
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          console.log(accounts[0]);
+          _currentUser = accounts[0];
+        }
+  
+        const contract = new ethers.Contract(
+          _tokenAddress,
+          tokenAbi,
+          provider
+        );
+  
+        console.log(address);
+        const txRes = await contract.balanceOf(_currentUser);
+  
+        if (Number(txRes._hex) > 0) {
+          return true;
+        }
+  
+        console.log(txRes);
+        return false;
+      }
+    };
 
   const mintNFT = async () => {
     let receiver;
@@ -925,6 +969,8 @@ export const CreateMeetProvider = ({ children }) => {
         setCurrentSuggestionsSim,
         currentSuggestions,
         setCurrentSuggestions,
+        checkNftBalance,
+        checkIfSubscribed
       }}
     >
       {children}

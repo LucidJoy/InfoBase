@@ -75,13 +75,13 @@ const ResearchPapers = ({ key, myKey, element }) => {
   }, []);
 
   return (
-    <div className='relative min-w-[250px] max-w-[250px]  h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]'>
-      <div className='flex flex-col justify-start p-[15px] gap-[5px]'>
-        <p className='font-semibold text-[16px] text-white'>
-          Profile ID:{" "}
-          <span className='text-[14px] font-semibold text-[#ef3cff]'>
+    <div className="relative min-w-[250px] max-w-[250px]  h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]">
+      <div className="flex flex-col justify-start p-[15px] gap-[5px]">
+        <p className="font-semibold text-[16px] text-white">
+          Paper ID:{" "}
+          <span className="text-[14px] font-semibold text-[#ef3cff]">
             {/* {element && Number(element)} */}
-            {Number(element.id._hex)}
+            {Number(myKey)}
           </span>
         </p>
         <p className='font-semibold text-[16px] text-white'>
@@ -118,6 +118,7 @@ const ResearchPapers = ({ key, myKey, element }) => {
             query: { element },
           }}
           className='flex items-center justify-center'
+          onClick={() => handleInfo()}
         >
           INFO
         </Link>
