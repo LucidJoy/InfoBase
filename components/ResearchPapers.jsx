@@ -78,10 +78,10 @@ const ResearchPapers = ({ key, myKey, element }) => {
     <div className="relative min-w-[250px] max-w-[250px]  h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]">
       <div className="flex flex-col justify-start p-[15px] gap-[5px]">
         <p className="font-semibold text-[16px] text-white">
-          Profile ID:{" "}
+          Paper ID:{" "}
           <span className="text-[14px] font-semibold text-[#ef3cff]">
             {/* {element && Number(element)} */}
-            {Number(element.id._hex)}
+            {Number(myKey)}
           </span>
         </p>
         <p className="font-semibold text-[16px] text-white">

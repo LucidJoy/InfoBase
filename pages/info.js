@@ -32,28 +32,28 @@ const Info = () => {
               <h3 className="font-bold text-[18px] text-[#c3073f] mr-[70px]">
                 Paper ID:
               </h3>
-              <p>{Number(currPaper.id._hex)}</p>
+              <p>{Number(currPaper?.id?._hex)}</p>
             </div>
             <div className="flex flex-row gap-[5px]">
               <h3 className="font-bold text-[18px] text-[#c3073f] mr-[70px]">
                 Title:
               </h3>
-              <p>{currPaper.title}</p>
+              <p>{currPaper?.title}</p>
             </div>
             <div className="flex flex-row gap-[5px]">
               <h3 className="font-bold text-[18px] text-[#c3073f] mr-[5px]">
                 Description:
               </h3>
-              <p>{currPaper.desc}</p>
+              <p>{currPaper?.desc}</p>
             </div>
-            <Link href={currPaper.fileURI}>
+            {/* <Link href={currPaper?.fileURI}> */}
             <div className="flex flex-row gap-[5px]">
               <h3 className="font-bold text-[18px] text-[#c3073f] mr-[80px]">
                 Link:
               </h3>
-              <p>{currPaper.fileURI}</p>
+              <p>{currPaper?.fileURI}</p>
             </div>
-            </Link>
+            {/* </Link> */}
           </div>
         </div>
 

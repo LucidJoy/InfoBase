@@ -14,11 +14,11 @@ import lighthouse, { upload } from "@lighthouse-web3/sdk";
 
 const CreateMeetContext = createContext({});
 
-const meetSciContractAddress = "0xB5a42c5cD7C202abf1ff0d4142c4104E62062db1";
+const meetSciContractAddress = "0x699639062cE6Ce1E1DD4AE9E6675Be3cdB20e2DD";
 const nftContractAddress = "0x4d8B7c0b212826cA116EC6F6dD43dC935EF098B2";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
 const tokenDeployerAddress = "0x57C304C2893EF70130cdDbf6ba40adf82605f588";
-const poolAddress = "0x5c152C29FCd928fDAA49852B21b5b9BEe1b12d98";
+const poolAddress = "0x9f38023490eEDF6F0ACCCDa47b1393473b2C45e3";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
