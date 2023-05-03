@@ -82,7 +82,7 @@ const Research = ({ roomId }) => {
 
   return (
     <div className='h-[100vh]'>
-      <Navbar />
+      <Navbar explore/>
 
       <div className='w-full flex flex-col items-center mt-[20px] bg-[#1a1a1d]'>
         <p className='text-[25px] text-[#c3073f] font-semibold mb-[10px]'>

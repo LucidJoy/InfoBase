@@ -13,10 +13,20 @@ import { shortenAddress } from "@/utils/shortenAddr";
 import { Navbar, Info } from "@/components";
 
 export default function Home() {
-  const { address, setAddress, toggleModal, setToggleModal, connectWallet } =
+  const { address, setAddress, toggleModal, setToggleModal, checkNftBalance, connectWallet } =
     useContext(CreateMeetContext);
 
   const router = useRouter();
+
+  const checkNftAuth = async () => {
+    const response = await checkNftBalance();
+
+    if (response) {
+      router.push('/explore');
+    } else {
+      alert("Please register before proceeding!!")
+    }
+  }
 
   return (
     <>
@@ -37,8 +47,16 @@ export default function Home() {
 
         <div className="h-[100vh] px-[20px]">
           <div className="absolute right-[20px] top-[20px] space-x-4">
+            <button
+              className="btn btn-outline border-[2px] px-[30px] text-[14px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d]"
+              onClick={() => checkNftAuth()}
+            >
+              Sign In
+            </button>
             {address !== "" ? (
-              <p className="text-white">{shortenAddress(address)}</p>
+              <button className="text-white btn btn-outline border-[2px] px-[30px] text-[14px] border-[#950740] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d]">
+                {shortenAddress(address)}
+              </button>
             ) : (
               <button
                 className="btn btn-outline border-[2px] px-[30px] text-[14px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d]"

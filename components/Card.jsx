@@ -18,7 +18,7 @@ const Card = ({ btnName }) => {
       </div>
       {!scholar ? (
         <p className='absolute top-[15px] text-[20px] font-medium'>
-          Researcher
+          New User
         </p>
       ) : (
         <p className='absolute top-[15px] text-[20px] font-medium'>Scholar</p>

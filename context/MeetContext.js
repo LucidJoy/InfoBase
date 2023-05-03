@@ -218,12 +218,21 @@ export const CreateMeetProvider = ({ children }) => {
   };
 
   // check nft balance
-  const checkNftBalance = async (_currentUser) => {
+  const checkNftBalance = async () => {
+    let _currentUser;
     if (window.ethereum) {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
       const signer = provider.getSigner();
+
+      if (ethereum.isConnected()) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        console.log(accounts[0]);
+        _currentUser = accounts[0];
+      }
 
       const contract = new ethers.Contract(
         nftContractAddress,
@@ -234,7 +243,7 @@ export const CreateMeetProvider = ({ children }) => {
       console.log(address);
       const txRes = await contract.balanceOf(_currentUser);
 
-      if (txRes > 0) {
+      if (Number(txRes._hex) > 0) {
         return true;
       }
 
@@ -262,6 +271,41 @@ export const CreateMeetProvider = ({ children }) => {
   //   }
   //   console.log("Authenticated: ", authentication);
   // }, [])
+
+    // check nft balance
+    const checkIfSubscribed = async (_tokenAddress) => {
+      let _currentUser;
+      if (window.ethereum) {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+  
+        if (ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          console.log(accounts[0]);
+          _currentUser = accounts[0];
+        }
+  
+        const contract = new ethers.Contract(
+          _tokenAddress,
+          tokenAbi,
+          provider
+        );
+  
+        console.log(address);
+        const txRes = await contract.balanceOf(_currentUser);
+  
+        if (Number(txRes._hex) > 0) {
+          return true;
+        }
+  
+        console.log(txRes);
+        return false;
+      }
+    };
 
   const mintNFT = async () => {
     let receiver;
@@ -925,6 +969,8 @@ export const CreateMeetProvider = ({ children }) => {
         setCurrentSuggestionsSim,
         currentSuggestions,
         setCurrentSuggestions,
+        checkNftBalance,
+        checkIfSubscribed
       }}
     >
       {children}
