@@ -65,7 +65,7 @@ const ResearchPapers = ({ key, myKey, element }) => {
     setCurrentSuggestionsIds(res.data.docs);
     setCurrentSuggestionsSim(res.data.sim);
 
-    router.push('/info')
+    router.push("/info");
   };
 
   let el;
@@ -84,40 +84,43 @@ const ResearchPapers = ({ key, myKey, element }) => {
             {Number(myKey)}
           </span>
         </p>
-        <p className="font-semibold text-[16px] text-white">
+        <p className='font-semibold text-[16px] text-white'>
           Address:{" "}
-          <span className="text-[14px] text-[#3eecff] font-semibold">
+          <span className='text-[14px] text-[#3eecff] font-semibold'>
             {/* {element && shortenAddress(element.researcher)} */}
             {shortenAddress(element.researcher)}
           </span>
         </p>
-        <p className="font-semibold text-[16px] text-white">
+        <p className='font-semibold text-[16px] text-white'>
           Title:{"  "}
-          <span className="text-[14px] font-normal text-[#A5ACBA]">
+          <span className='text-[14px] font-normal text-[#A5ACBA]'>
             {element?.title}
           </span>
         </p>
-        <p className="font-semibold text-[16px] text-white">
+        <p className='font-semibold text-[16px] text-white'>
           Description:{" "}
-          <span className="text-[14px] font-normal text-[#A5ACBA]">
+          <span className='text-[14px] font-normal text-[#A5ACBA]'>
             {element?.desc}
           </span>
         </p>
-        <p className="font-semibold text-[16px] text-white">
+        <p className='font-semibold text-[16px] text-white'>
           Department:{" "}
-          <span className="text-[14px] font-normal text-[#A5ACBA]">
+          <span className='text-[14px] font-normal text-[#A5ACBA]'>
             {element?.department}
           </span>
         </p>
       </div>
 
-      <div className="flex items-center justify-center">
-        <button
-          className="absolute bottom-[10px] text-[#747477] border-2 px-[20px] py-[5px] rounded-[8px] border-[#c3073f] text-[15px] hover:scale-110 hover:bg-[#c3073f] hover:text-[#1a1a1d] transition-all duration-150 ease-in-out font-medium"
-          onClick={() => handleInfo()}
+      <div className=''>
+        <Link
+          href={{
+            pathname: `/info`,
+            query: { element },
+          }}
+          className='flex items-center justify-center'
         >
           INFO
-        </button>
+        </Link>
       </div>
     </div>
   );

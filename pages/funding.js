@@ -13,7 +13,7 @@ const funding = () => {
     exploreResearchers,
     matchingValue,
     depositToMainPool,
-    getMatchingBalance
+    getMatchingBalance,
   } = useContext(CreateMeetContext);
 
   const [poolAmount, setPoolAmount] = useState(0);
@@ -21,14 +21,14 @@ const funding = () => {
   const handlePoolFund = async () => {
     const res = await depositToMainPool(fundingAmount);
     console.log("Funding to main pool: ", res);
-  }
+  };
 
   useEffect(() => {
     (async () => {
       let result = await getMatchingBalance();
       console.log("Matching pool balance: ", result);
     })();
-  }, [])
+  }, []);
 
   return (
     <div>
@@ -83,7 +83,7 @@ const funding = () => {
         </p>
 
         <div className='mt-[20px] bg-[#4e4e50] text-white px-[50px] py-[30px] rounded-[15px]'>
-          <table class='table-auto'>
+          <table className='table-auto'>
             <thead>
               <tr>
                 <th className='px-[20px] text-[20px] mb-[10px]'>Researcher</th>
