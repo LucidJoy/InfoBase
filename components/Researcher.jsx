@@ -85,7 +85,7 @@ const Researcher = ({ key, myKey, element }) => {
   }, []);
 
   return (
-    <div className='flex relative flex-col items-center justify-center w-[250px] h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]'>
+    <div className='flex relative flex-col items-center justify-center h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472] min-w-[250px] max-w-[250px]'>
       <div
         className='absolute right-[5px] top-[5px] border border-gray-700 glassmorphism cursor-pointer z-[20] p-[10px] rounded-[10px]'
         onClick={() => handleVote()}
