@@ -1,11 +1,12 @@
 **Links**
 
 1. Demo PPT for InfoBase: https://youtu.be/Fnx9F-YzIZQ
-2. Flask Server: https://github.com/Kshitij-Sharma49/InfoTech
-3. Flask Backend Deployed Link: https://infobase.onrender.com
-4. NFT Hyperspacenet URL: https://explorer.glif.io/address/0x4d8B7c0b212826cA116EC6F6dD43dC935EF098B2/?network=hyperspacenet
-5. InfoBase Hyperspacenet URL: https://explorer.glif.io/address/0x699639062cE6Ce1E1DD4AE9E6675Be3cdB20e2DD/?network=hyperspacenet
-6. Pool Hyperspacenet URL: https://explorer.glif.io/address/0x9f38023490eEDF6F0ACCCDa47b1393473b2C45e3/?network=hyperspacenet
+2. InfoBase Deployed Link: https://info-base.vercel.app/
+3. Flask Server: https://github.com/Kshitij-Sharma49/InfoTech
+4. Flask Backend Deployed Link: https://infobase.onrender.com
+5. NFT Hyperspacenet URL: https://explorer.glif.io/address/0x4d8B7c0b212826cA116EC6F6dD43dC935EF098B2/?network=hyperspacenet
+6. InfoBase Hyperspacenet URL: https://explorer.glif.io/address/0x699639062cE6Ce1E1DD4AE9E6675Be3cdB20e2DD/?network=hyperspacenet
+7. Pool Hyperspacenet URL: https://explorer.glif.io/address/0x9f38023490eEDF6F0ACCCDa47b1393473b2C45e3/?network=hyperspacenet
 
 **Problem Statement**
 
