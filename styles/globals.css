@@ -41,18 +41,18 @@ p:hover .arrow {
 
 .content h2 {
   color: #fff;
-  font-size: 40px;
+  font-size: 50px;
   position: absolute;
   transform: translate(-50%, -50%);
 }
 
 .content h2:nth-child(1) {
   color: transparent;
-  -webkit-text-stroke: 2px #c3073f;
+  -webkit-text-stroke: 2px #b23c47;
 }
 
 .content h2:nth-child(2) {
-  color: #c3073f;
+  color: #fe5665;
   animation: animate 4s ease-in-out infinite;
 }
 
@@ -88,9 +88,10 @@ p:hover .arrow {
 }
 
 .text-grad {
-  background: linear-gradient(to right, #ff8c00b4, #ff0000bc, #c3073f);
+  background: linear-gradient(to right, #fe4454, #c3073f, #960925);
   -webkit-background-clip: text;
   background-clip: text;
+
   /* Set the text color to transparent so that the background gradient shows through */
   color: transparent;
 }

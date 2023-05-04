@@ -1,7 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Web3 from "web3";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
 
 import { useRouter } from "next/router";
 
@@ -22,6 +24,16 @@ export default function Home() {
     checkNftBalance,
     connectWallet,
   } = useContext(CreateMeetContext);
+
+  const particlesInit = useCallback(async (engine) => {
+    console.log(engine);
+
+    await loadFull(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(async (container) => {
+    await console.log(container);
+  }, []);
 
   const router = useRouter();
 
@@ -53,10 +65,6 @@ export default function Home() {
         )}
 
         <div className='h-[100vh] px-[20px] z-30'>
-          <div className='absolute left-[20px] top-[20px] z-20'>
-            <p className='z-30 text-white'>InfoBase</p>
-          </div>
-
           <div className='absolute right-[20px] top-[20px] space-x-4 z-30'>
             <button
               className='btn btn-outline border-[2px] px-[30px] text-[14px] border-[#950740] text-[#c3073f] hover:bg-[#950740] hover:border-[#950740] hover:text-[#1a1a1d] z-30'
@@ -81,16 +89,12 @@ export default function Home() {
           <div className='flex'>
             <div className='flex-1 z-40 mt-[120px] flex items-center justify-center w-full'>
               <div className='flex flex-col items-center justify-center w-fit'>
-                <p className='text-[70px] mb-[30px] mr-[180px] font-bold text-grad'>
+                <p className='text-[100px] mb-[30px] mr-[250px] font-bold text-grad'>
                   InfoBase
                 </p>
                 <div className='content'>
-                  <h2 className='font-bold text-[20px]'>
-                    Develop.Preview.Ship.
-                  </h2>
-                  <h2 className='font-bold text-[20px]'>
-                    Develop.Preview.Ship.
-                  </h2>
+                  <h2 className='font-bold'>Explore.Collaborate.Earn</h2>
+                  <h2 className='font-bold'>Explore.Collaborate.Earn</h2>
                 </div>
               </div>
             </div>
@@ -101,9 +105,91 @@ export default function Home() {
           </div>
         </div>
 
-        <div className='absolute top-0 bottom-0 right-0 left-0'>
-          <Background />
-        </div>
+        {/* <div className='absolute top-0 bottom-0 right-0 left-0'>
+          <Particles
+            id='tsparticles'
+            url='http://foo.bar/particles.json'
+            init={particlesInit}
+            loaded={particlesLoaded}
+          />
+        </div> */}
+        <Particles
+          id='tsparticles'
+          init={particlesInit}
+          loaded={particlesLoaded}
+          options={{
+            background: {
+              color: {
+                value: "#1a1a1d",
+              },
+            },
+            fpsLimit: 120,
+            interactivity: {
+              events: {
+                onClick: {
+                  enable: true,
+                  mode: "push",
+                },
+                onHover: {
+                  enable: true,
+                  mode: "repulse",
+                },
+                resize: true,
+              },
+              modes: {
+                push: {
+                  quantity: 4,
+                },
+                repulse: {
+                  distance: 200,
+                  duration: 0.4,
+                },
+              },
+            },
+            particles: {
+              color: {
+                value: "#4e4e50",
+              },
+              links: {
+                color: "#4e4e50",
+                distance: 150,
+                enable: true,
+                opacity: 0.5,
+                width: 1,
+              },
+              collisions: {
+                enable: true,
+              },
+              move: {
+                direction: "none",
+                enable: true,
+                outModes: {
+                  default: "bounce",
+                },
+                random: false,
+                speed: 2,
+                straight: false,
+              },
+              number: {
+                density: {
+                  enable: true,
+                  area: 800,
+                },
+                value: 80,
+              },
+              opacity: {
+                value: 0.5,
+              },
+              shape: {
+                type: "circle",
+              },
+              size: {
+                value: { min: 1, max: 5 },
+              },
+            },
+            detectRetina: true,
+          }}
+        />
       </main>
     </div>
   );

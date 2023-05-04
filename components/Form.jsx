@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import CreateMeetContext from "@/context/MeetContext";
 
 const Form = () => {
-  const { form, setForm, address, mintNFT } = useContext(CreateMeetContext);
+  const { form, setForm, address, mintNFT, deployToken, addResearcher } = useContext(CreateMeetContext);
 
   const router = useRouter();
 
