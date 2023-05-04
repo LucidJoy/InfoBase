@@ -1,7 +1,12 @@
 **Links**
 
 1. Demo PPT for InfoBase: https://youtu.be/Fnx9F-YzIZQ
-2. InfoBase Deployed Link: https://info-base.vercel.app/
+
+(DISCLAIMER:
+Backend is deployed to Render.com and therefore takes time to fetch data. Please do reload the page for a few times if it doesn't load information at the first time
+Can check the log to check if response is received)
+
+2. InfoBase Deployed Link: https://info-base.vercel.app/   
 3. Flask Server: https://github.com/Kshitij-Sharma49/InfoTech
 4. Flask Backend Deployed Link: https://infobase.onrender.com
 5. NFT Hyperspacenet URL: https://explorer.glif.io/address/0x4d8B7c0b212826cA116EC6F6dD43dC935EF098B2/?network=hyperspacenet
