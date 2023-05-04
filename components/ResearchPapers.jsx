@@ -75,11 +75,11 @@ const ResearchPapers = ({ key, myKey, element }) => {
   }, []);
 
   return (
-    <div className="relative min-w-[250px] max-w-[250px]  h-[350px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]">
-      <div className="flex flex-col justify-start p-[15px] gap-[5px]">
-        <p className="font-semibold text-[16px] text-white">
+    <div className='relative min-w-[250px] max-w-[250px]  h-[370px] rounded-[15px] border-[2px] border-dashed border-[#6F2232] bg-[#2f2f3472]'>
+      <div className='flex flex-col justify-start p-[15px] gap-[5px]'>
+        <p className='font-semibold text-[16px] text-white'>
           Paper ID:{" "}
-          <span className="text-[14px] font-semibold text-[#ef3cff]">
+          <span className='text-[14px] font-semibold text-[#ef3cff]'>
             {/* {element && Number(element)} */}
             {Number(myKey)}
           </span>
@@ -97,9 +97,9 @@ const ResearchPapers = ({ key, myKey, element }) => {
             {element?.title}
           </span>
         </p>
-        <p className='font-semibold text-[16px] text-white'>
+        <p className='font-semibold text-[16px] text-white h-[100px] overflow-auto'>
           Description:{" "}
-          <span className='text-[14px] font-normal text-[#A5ACBA]'>
+          <span className='text-[14px] font-normal text-[#A5ACBA] '>
             {element?.desc}
           </span>
         </p>
@@ -111,13 +111,13 @@ const ResearchPapers = ({ key, myKey, element }) => {
         </p>
       </div>
 
-      <div className=''>
+      <div className=' w-full flex items-center justify-center'>
         <Link
           href={{
             pathname: `/info`,
             query: { element },
           }}
-          className='flex items-center justify-center'
+          className='absolute bottom-[10px] text-[#747477] border-2 px-[20px] py-[5px] rounded-[8px] border-[#c3073f] text-[15px] hover:scale-110 hover:bg-[#c3073f] hover:text-[#1a1a1d] transition-all duration-150 ease-in-out font-medium'
           onClick={() => handleInfo()}
         >
           INFO

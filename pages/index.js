@@ -79,7 +79,22 @@ export default function Home() {
           </div>
 
           <div className='flex'>
-            <div className='flex-1 z-40 mt-[120px]'>joy</div>
+            <div className='flex-1 z-40 mt-[120px] flex items-center justify-center w-full'>
+              <div className='flex flex-col items-center justify-center w-fit'>
+                <p className='text-[70px] mb-[30px] mr-[180px] font-bold text-grad'>
+                  InfoBase
+                </p>
+                <div className='content'>
+                  <h2 className='font-bold text-[20px]'>
+                    Develop.Preview.Ship.
+                  </h2>
+                  <h2 className='font-bold text-[20px]'>
+                    Develop.Preview.Ship.
+                  </h2>
+                </div>
+              </div>
+            </div>
+
             <div className='flex-1 z-40 mt-[120px] flex items-center justify-center '>
               <Form />
             </div>
