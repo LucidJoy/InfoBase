@@ -18,7 +18,7 @@ body {
 }
 
 .glassmorphism {
-  background: rgba(0, 0, 0, 0.39);
+  background: rgba(53, 53, 53, 0.39);
   backdrop-filter: blur(80px);
   -webkit-backdrop-filter: blur(80px);
 }
@@ -31,4 +31,10 @@ body {
 p:hover .arrow {
   transform: translateX(5px);
   color: #9f9fa1;
+}
+
+.white-glassmorphism {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
 }

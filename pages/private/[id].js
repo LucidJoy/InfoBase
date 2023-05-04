@@ -19,10 +19,11 @@ import {
 import { Navbar, SubscriberCard } from "@/components";
 import CreateMeetContext from "@/context/MeetContext";
 import { leave, mic, pattern, record, unrecord, video } from "@/assets";
-import { shortenAddress } from "@/utils/shortenAddr";
+// import {} from "@/utils/hortenAddr";
 
-const Research = ({ roomId }) => {
+const Research = () => {
   const videoRef = useRef(null);
+  let roomId = "lby-gxub-hjh";
 
   const { state, send } = useMeetingMachine();
 
@@ -82,7 +83,7 @@ const Research = ({ roomId }) => {
 
   return (
     <div className='h-[100vh]'>
-      <Navbar explore/>
+      <Navbar explore />
 
       <div className='w-full flex flex-col items-center mt-[20px] bg-[#1a1a1d]'>
         <p className='text-[25px] text-[#c3073f] font-semibold mb-[10px]'>
@@ -183,9 +184,7 @@ const Research = ({ roomId }) => {
         <div className='py-[20px] flex flex-col items-center justify-center'>
           <p className='mb-[10px] font-medium text-[16px]'>
             Researcher address:
-            <span className='text-white ml-[5px]'>
-              {shortenAddress(researchCardAddr)}
-            </span>
+            <span className='text-white ml-[5px]'>{researchCardAddr}</span>
           </p>
           <video
             className='rounded-[15px] w-[400px] mb-[30px]'
@@ -221,39 +220,39 @@ const Research = ({ roomId }) => {
   );
 };
 
-export const getServerSideProps = async () => {
-  try {
-    const resp = await axios.post(
-      "https://api.huddle01.com/api/v1/create-room",
-      {
-        title: "JOY",
-        // roomLock: false,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": process.env.NEXT_PUBLIC_HUDDLE_API_KEY,
-        },
-      }
-    );
+// export const getServerSideProps = async () => {
+//   try {
+//     const resp = await axios.post(
+//       "https://api.huddle01.com/api/v1/create-room",
+//       {
+//         title: "JOY",
+//         // roomLock: false,
+//       },
+//       {
+//         headers: {
+//           "Content-Type": "application/json",
+//           "x-api-key": process.env.NEXT_PUBLIC_HUDDLE_API_KEY,
+//         },
+//       }
+//     );
 
-    const { data } = resp;
+//     const { data } = resp;
 
-    const roomId = data.data.roomId;
+//     const roomId = data.data.roomId;
 
-    return {
-      props: {
-        roomId,
-      },
-    };
-  } catch (error) {
-    console.error("🏆🏆🏆 Error fetching data:", error);
-    return {
-      props: {
-        roomId: null,
-      },
-    };
-  }
-};
+//     return {
+//       props: {
+//         roomId,
+//       },
+//     };
+//   } catch (error) {
+//     console.error("🏆🏆🏆 Error fetching data:", error);
+//     return {
+//       props: {
+//         roomId: null,
+//       },
+//     };
+//   }
+// };
 
 export default Research;

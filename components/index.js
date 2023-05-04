@@ -7,6 +7,7 @@ import SubscriberCard from "./SubscriberCard";
 import Researcher from "./Researcher";
 import ResearchPapers from "./ResearchPapers";
 import SuggestedCard from "./SuggestedCard";
+import Form from "./Form";
 
 export {
   Navbar,
@@ -18,4 +19,5 @@ export {
   Researcher,
   ResearchPapers,
   SuggestedCard,
+  Form,
 };

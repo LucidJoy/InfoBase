@@ -17,6 +17,7 @@ import mic from "./mic.svg";
 import record from "./record.svg";
 import unrecord from "./unrecord.svg";
 import leave from "./leave.svg";
+import backanim from "./backanim.gif";
 
 export {
   pattern,
@@ -38,4 +39,5 @@ export {
   record,
   unrecord,
   leave,
+  backanim,
 };
