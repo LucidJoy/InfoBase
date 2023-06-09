@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 import { Navbar } from "@/components";
 import CreateMeetContext from "@/context/MeetContext";
@@ -14,9 +16,14 @@ const funding = () => {
     matchingValue,
     depositToMainPool,
     getMatchingBalance,
+    date,
+    setDate,
   } = useContext(CreateMeetContext);
 
   const [poolAmount, setPoolAmount] = useState(0);
+  const [value, onChange] = useState(new Date());
+  const [isCalender, setIsCalender] = useState(false);
+  const [dateModal, setDateModal] = useState(false);
 
   const handlePoolFund = async () => {
     const res = await depositToMainPool(fundingAmount);
@@ -30,24 +37,38 @@ const funding = () => {
     })();
   }, []);
 
+  const handleDateClicked = async () => {
+    setDateModal(false);
+  };
+
   return (
     <div>
       <Navbar explore />
 
       <div className='nav-h flex flex-col items-center'>
         <div className='flex flex-row relative items-center mt-[30px] '>
-          <p className='text-center text-[30px] text-[#950740]'>POOL</p>
+          <p className='text-center text-[35px] font-bold text-[#c3073f]'>
+            POOL
+          </p>
           <button
-            className='w-[125px] h-[30px] left-[175px] absolute bg-[#c3073f] text-[#1a1a1d] rounded-[5px] font-semibold transition-all duration-150 ease-in-out'
+            className='w-[125px] h-[30px] left-[360px] absolute bg-[#c3073f] text-[#1a1a1d] rounded-[5px] font-semibold transition-all duration-150 ease-in-out'
             onClick={() => {
               setIsFund(!isFund);
             }}
           >
             Fund Pool
           </button>
+          <button
+            className='w-[135px] h-[30px] right-[375px] absolute bg-[#c3073f] text-[#1a1a1d] rounded-[5px] font-semibold transition-all duration-150 ease-in-out'
+            onClick={() => {
+              setDateModal(!dateModal);
+            }}
+          >
+            Select Date
+          </button>
 
           {isFund && (
-            <div className='absolute top-[0px] left-[320px] h-fit w-fit flex flex-col items-center gap-[20px] bg-[#27272A] p-[20px] rounded-[10px] border border-gray-700'>
+            <div className='absolute top-[50px] left-[325px] h-fit w-fit flex flex-col items-center gap-[20px] bg-[#27272A] p-[20px] rounded-[10px] border border-gray-700'>
               <input
                 type='number'
                 className='h-[40px] w-[150px] text-white px-[10px] rounded-[10px]'
@@ -70,15 +91,37 @@ const funding = () => {
               </button>
             </div>
           )}
+
+          {dateModal && (
+            <div className='absolute top-[50px] right-[375px] flex justify-center items-center flex-col gap-[10px]'>
+              <div className=' flex flex-col items-center gap-[20px] bg-[#27272A] rounded-[10px] border border-gray-700'>
+                <Calendar
+                  onChange={onChange}
+                  value={value}
+                  className='rounded-[10px]'
+                  activeStartDate={new Date()}
+                  minDate={new Date()}
+                  onClickDay={(e) => setDate(e.getTime() / 1000)}
+                />
+              </div>
+
+              <button
+                className='border-[2px] border-[#c3073f] w-fit px-[15px] py-[5px] rounded-[10px]'
+                onClick={() => handleDateClicked()}
+              >
+                Confirm
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className='mt-[20px] w-[400px] h-[125px] bg-[#4e4e50] rounded-[15px] flex items-center justify-center text-[60px]'>
+        <div className='mt-[20px] mb-[20px] w-[400px] h-[125px] bg-[#4e4e50] rounded-[15px] flex items-center justify-center text-[60px]'>
           <p className='text-[#fff] font-semibold animate-pulse'>
             {matchingValue} tFIL
           </p>
         </div>
 
-        <p className='text-center mt-[70px] text-[30px] text-[#ac2e4b]'>
+        <p className='text-center mt-[50px] text-[35px] text-[#c3073f] font-bold'>
           LEADERBOARD
         </p>
 

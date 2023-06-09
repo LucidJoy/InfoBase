@@ -61,6 +61,7 @@ export const CreateMeetProvider = ({ children }) => {
   const [leaderboardFund, setLeaderboardFund] = useState(false);
   const [matchingValue, setMatchingValue] = useState(0);
   const [thumbnail, setThumbnail] = useState(null);
+  const [date, setDate] = useState("");
 
   // HUDDLE
   const [researchCardAddr, setResearchCardAddr] = useState("");
@@ -977,6 +978,8 @@ export const CreateMeetProvider = ({ children }) => {
         setLanguage,
         isLoading,
         setIsLoading,
+        date,
+        setDate,
       }}
     >
       {children}
