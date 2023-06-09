@@ -13,7 +13,7 @@ const marketplace = () => {
 
           <div className='drawer-content flex flex-col p-[30px] pt-0 mt-[20px]'>
             <p className='text-[#c3073f] text-[37px] mb-[20px] font-medium'>
-              Video Jam
+              Collaborate
             </p>
 
             <Info />

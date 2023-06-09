@@ -94,20 +94,24 @@ const Researcher = ({ key, myKey, element }) => {
       </div>
 
       <div className='absolute w-full h-full rounded-[15px] overflow-hidden'>
-        <div className='h-[45px] w-[45px] rounded-full bg-[#3edcff] ml-[10px] mt-[10px]'>
-          <Image
-            src={profilePictures[myKey - 1]}
-            className='rounded-full h-[45px] w-[45px]'
-            alt='profile picture'
-          ></Image>
-        </div>
         <div className='flex flex-col justify-start p-[15px] gap-[5px]'>
-          <p className='font-semibold text-[16px] text-white'>
-            Profile ID:{" "}
-            <span className='text-[14px] font-semibold text-[#ef3cff]'>
+          <div className='font-semibold text-[16px] text-white bg-[#2E2E30] border border-[#374151] w-fit px-[10px] rounded-full'>
+            #
+            <span className='text-[14px] font-semibold text-[#ef3cff] ml-[5px]'>
               {myKey}
             </span>
-          </p>
+          </div>
+
+          <div className='w-full flex items-center justify-center my-[15px]'>
+            <div className='h-[70px] w-[70px] rounded-full'>
+              <Image
+                src={profilePictures[myKey - 1]}
+                className='rounded-full h-[70px] w-[70px]'
+                alt='profile picture'
+              ></Image>
+            </div>
+          </div>
+
           <p className='font-semibold text-[16px] text-white'>
             Address:{" "}
             <span className='text-[14px] text-[#3eecff] font-semibold'>

@@ -14,11 +14,11 @@ import lighthouse, { upload } from "@lighthouse-web3/sdk";
 
 const CreateMeetContext = createContext({});
 
-const meetSciContractAddress = "0x699639062cE6Ce1E1DD4AE9E6675Be3cdB20e2DD";
-const nftContractAddress = "0x4d8B7c0b212826cA116EC6F6dD43dC935EF098B2";
+const meetSciContractAddress = "0xc4796c05E220A9F19aAf26fdfdC14C8969c11cE7";
+const nftContractAddress = "0xDF6E9c4d51BD389a9bde27e1c1F2773fFFEEBe3E";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
-const tokenDeployerAddress = "0x57C304C2893EF70130cdDbf6ba40adf82605f588";
-const poolAddress = "0x9f38023490eEDF6F0ACCCDa47b1393473b2C45e3";
+const tokenDeployerAddress = "0xE8068C23B6604B650aA5EE6e229a0A85855C7A6E";
+const poolAddress = "0xc4796c05E220A9F19aAf26fdfdC14C8969c11cE7";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
@@ -54,11 +54,13 @@ export const CreateMeetProvider = ({ children }) => {
     description: "",
     department: "",
     uploadFile: "",
+    uploadThumbnail: "",
   });
   const [fundingAmount, setFundingAmount] = useState(0);
   const [isFund, setIsFund] = useState(false);
   const [leaderboardFund, setLeaderboardFund] = useState(false);
   const [matchingValue, setMatchingValue] = useState(0);
+  const [thumbnail, setThumbnail] = useState(null);
 
   // HUDDLE
   const [researchCardAddr, setResearchCardAddr] = useState("");
@@ -74,6 +76,9 @@ export const CreateMeetProvider = ({ children }) => {
   const [currentSuggestionsIds, setCurrentSuggestionsIds] = useState([]);
   const [currentSuggestionsSim, setCurrentSuggestionsSim] = useState([]);
   const [currentSuggestions, setCurrentSuggestions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [language, setLanguage] = useState("e");
 
   const router = useRouter();
 
@@ -192,7 +197,7 @@ export const CreateMeetProvider = ({ children }) => {
     try {
       await ethereum.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0xc45" }],
+        params: [{ chainId: "80001" }],
       });
     } catch (switchError) {
       // This error code indicates that the chain has not been added to MetaMask.
@@ -202,9 +207,9 @@ export const CreateMeetProvider = ({ children }) => {
             method: "wallet_addEthereumChain",
             params: [
               {
-                chainId: "0xc45",
-                chainName: "Filecoin - Hyperspace testnet",
-                rpcUrls: ["https://rpc.ankr.com/filecoin_testnet"] /* ... */,
+                chainId: "80001",
+                chainName: "Mumbai Testnet",
+                rpcUrls: ["https://rpc.ankr.com/polygon_mumbai"] /* ... */,
               },
             ],
           });
@@ -272,40 +277,36 @@ export const CreateMeetProvider = ({ children }) => {
   //   console.log("Authenticated: ", authentication);
   // }, [])
 
-    // check nft balance
-    const checkIfSubscribed = async (_tokenAddress) => {
-      let _currentUser;
-      if (window.ethereum) {
-        const web3Modal = new Web3Modal();
-        const connection = await web3Modal.connect();
-        const provider = new ethers.providers.Web3Provider(connection);
-        const signer = provider.getSigner();
-  
-        if (ethereum.isConnected()) {
-          const accounts = await window.ethereum.request({
-            method: "eth_accounts",
-          });
-          console.log(accounts[0]);
-          _currentUser = accounts[0];
-        }
-  
-        const contract = new ethers.Contract(
-          _tokenAddress,
-          tokenAbi,
-          provider
-        );
-  
-        console.log(address);
-        const txRes = await contract.balanceOf(_currentUser);
-  
-        if (Number(txRes._hex) > 0) {
-          return true;
-        }
-  
-        console.log(txRes);
-        return false;
+  // check nft balance
+  const checkIfSubscribed = async (_tokenAddress) => {
+    let _currentUser;
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      if (ethereum.isConnected()) {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        console.log(accounts[0]);
+        _currentUser = accounts[0];
       }
-    };
+
+      const contract = new ethers.Contract(_tokenAddress, tokenAbi, provider);
+
+      console.log(address);
+      const txRes = await contract.balanceOf(_currentUser);
+
+      if (Number(txRes._hex) > 0) {
+        return true;
+      }
+
+      console.log(txRes);
+      return false;
+    }
+  };
 
   const mintNFT = async () => {
     let receiver;
@@ -330,11 +331,10 @@ export const CreateMeetProvider = ({ children }) => {
           receiver = accounts[0];
         }
 
-        let mintingPrice = utils.parseEther("1.0");
+        // let mintingPrice = utils.parseEther("1.0");
 
         const txRes = await contract.safeMint(receiver, {
-          value: mintingPrice,
-          gasLimit: 500000000,
+          gasLimit: 3000000,
         });
 
         await txRes.wait();
@@ -365,7 +365,7 @@ export const CreateMeetProvider = ({ children }) => {
       console.log(maxSupply);
 
       const txRes = await contract.createToken(alias, tokenSymbol, maxSupply, {
-        gasLimit: 5000000000,
+        gasLimit: 3000000,
       });
 
       await txRes.wait(1);
@@ -412,7 +412,7 @@ export const CreateMeetProvider = ({ children }) => {
         tokenAddress,
         maxSupply,
         {
-          gasLimit: 500000000,
+          gasLimit: 3000000,
         }
       );
 
@@ -467,7 +467,7 @@ export const CreateMeetProvider = ({ children }) => {
       );
 
       const txRes = await contract.voteToProfileId(researchPaperId, {
-        gasLimit: 500000000,
+        gasLimit: 3000000,
       });
 
       await txRes.wait(1);
@@ -561,7 +561,7 @@ export const CreateMeetProvider = ({ children }) => {
         department,
         uploadFile,
         {
-          gasLimit: 500000000,
+          gasLimit: 3000000,
         }
       );
 
@@ -669,7 +669,7 @@ export const CreateMeetProvider = ({ children }) => {
         );
 
         const txRes = await meetSciContract.subscribe(scholar, researcher, {
-          gasLimit: 5000000000,
+          gasLimit: 30000000,
         });
 
         await txRes.wait(1);
@@ -754,7 +754,7 @@ export const CreateMeetProvider = ({ children }) => {
 
         const txRes = await poolContract.depositMoneyToPool({
           value: amount,
-          gasLimit: 5000000000,
+          gasLimit: 30000000,
         });
 
         await txRes.wait(1);
@@ -790,7 +790,7 @@ export const CreateMeetProvider = ({ children }) => {
 
         const txRes = await poolContract.fundResearcher(researcher, user, {
           value: amount,
-          gasLimit: 5000000000,
+          gasLimit: 30000000,
         });
 
         await txRes.wait(1);
@@ -824,7 +824,7 @@ export const CreateMeetProvider = ({ children }) => {
         const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
 
         const txRes = await poolContract.disperseFunds(researchers, amounts, {
-          gasLimit: 5000000000,
+          gasLimit: 30000000,
         });
 
         await txRes.wait(1);
@@ -970,7 +970,13 @@ export const CreateMeetProvider = ({ children }) => {
         currentSuggestions,
         setCurrentSuggestions,
         checkNftBalance,
-        checkIfSubscribed
+        checkIfSubscribed,
+        thumbnail,
+        setThumbnail,
+        language,
+        setLanguage,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}

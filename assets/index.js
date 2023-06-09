@@ -18,6 +18,8 @@ import record from "./record.svg";
 import unrecord from "./unrecord.svg";
 import leave from "./leave.svg";
 import backanim from "./backanim.gif";
+import blob from "./blob.svg";
+import blobBlur from "./blobBlur.svg";
 
 export {
   pattern,
@@ -40,4 +42,6 @@ export {
   unrecord,
   leave,
   backanim,
+  blob,
+  blobBlur,
 };
