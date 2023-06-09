@@ -79,6 +79,9 @@ export const CreateMeetProvider = ({ children }) => {
   const [currentSuggestions, setCurrentSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [file1, setFile1] = useState(null);
+  const [file2, setFile2] = useState(null);
+
   const [language, setLanguage] = useState("e");
 
   const router = useRouter();
@@ -980,6 +983,10 @@ export const CreateMeetProvider = ({ children }) => {
         setIsLoading,
         date,
         setDate,
+        file1,
+        setFile1,
+        file2,
+        setFile2,
       }}
     >
       {children}
