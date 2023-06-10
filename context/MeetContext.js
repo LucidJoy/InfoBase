@@ -61,6 +61,7 @@ export const CreateMeetProvider = ({ children }) => {
   const [leaderboardFund, setLeaderboardFund] = useState(false);
   const [matchingValue, setMatchingValue] = useState(0);
   const [thumbnail, setThumbnail] = useState(null);
+  const [date, setDate] = useState("");
 
   // HUDDLE
   const [researchCardAddr, setResearchCardAddr] = useState("");
@@ -77,6 +78,9 @@ export const CreateMeetProvider = ({ children }) => {
   const [currentSuggestionsSim, setCurrentSuggestionsSim] = useState([]);
   const [currentSuggestions, setCurrentSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [file1, setFile1] = useState(null);
+  const [file2, setFile2] = useState(null);
 
   const [language, setLanguage] = useState("e");
 
@@ -887,6 +891,25 @@ export const CreateMeetProvider = ({ children }) => {
     }
   };
 
+  const setDeadline = async (deadline) => {
+    if (window.ethereum) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
+
+      const txRes = await poolContract.setDeadline(deadline, {
+        gasLimit: 300000000,
+      });
+      txRes.wait(4);
+
+      console.log("Set deadline balance: ", txRes);
+      return txRes;
+    }
+  };
+
   useEffect(() => {
     (async () => {
       let amt = await getMatchingBalance();
@@ -978,6 +1001,13 @@ export const CreateMeetProvider = ({ children }) => {
         setLanguage,
         isLoading,
         setIsLoading,
+        date,
+        setDate,
+        file1,
+        setFile1,
+        file2,
+        setFile2,
+        setDeadline,
       }}
     >
       {children}
