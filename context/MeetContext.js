@@ -14,11 +14,11 @@ import lighthouse, { upload } from "@lighthouse-web3/sdk";
 
 const CreateMeetContext = createContext({});
 
-const meetSciContractAddress = "0xc4796c05E220A9F19aAf26fdfdC14C8969c11cE7";
+const meetSciContractAddress = "0x4bbe36fFde548CAf732A76a2096937efed9D7DC7";
 const nftContractAddress = "0xDF6E9c4d51BD389a9bde27e1c1F2773fFFEEBe3E";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
 const tokenDeployerAddress = "0xE8068C23B6604B650aA5EE6e229a0A85855C7A6E";
-const poolAddress = "0xc4796c05E220A9F19aAf26fdfdC14C8969c11cE7";
+const poolAddress = "0x4bbe36fFde548CAf732A76a2096937efed9D7DC7";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
@@ -597,6 +597,7 @@ export const CreateMeetProvider = ({ children }) => {
     (async () => {
       const response = await getAllResearcherPapers();
       console.log("Response to all papers: ", response);
+      console.log("Response to paper image: ", response.coverImage);
       setExploreResearchPapers(response);
     })();
   }, []);
