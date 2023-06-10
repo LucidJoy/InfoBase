@@ -18,6 +18,7 @@ const funding = () => {
     getMatchingBalance,
     date,
     setDate,
+    setDeadline,
   } = useContext(CreateMeetContext);
 
   const [poolAmount, setPoolAmount] = useState(0);
@@ -38,6 +39,9 @@ const funding = () => {
   }, []);
 
   const handleDateClicked = async () => {
+    console.log("date => ", date);
+    await setDeadline(date);
+
     setDateModal(false);
   };
 
