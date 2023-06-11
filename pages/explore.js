@@ -98,7 +98,7 @@ const explore = () => {
           <div className='z-10 h-full w-full absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center'>
             <div className='flex flex-col w-[70%] items-center'>
               <h1 className='text-[50px] text-white font-bold'>
-                Lorem ipsum dolor sit amet.
+                Explore the world of DeSci
               </h1>
               <p className='w-[70%] mt-[10px] text-gray-300'>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit.
