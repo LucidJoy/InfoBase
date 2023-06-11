@@ -101,9 +101,7 @@ const explore = () => {
                 Explore the world of DeSci
               </h1>
               <p className='w-[70%] mt-[10px] text-gray-300'>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Deserunt deleniti provident corporis corrupti sunt, quaerat quam
-                nulla laudantium debitis.
+                A platform where each individual is super powered with modern and cutting edge technology to support your passion and help you get recognition for your hard work.
               </p>
             </div>
           </div>
