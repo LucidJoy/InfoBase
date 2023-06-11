@@ -60,7 +60,7 @@ const TableRow = ({ key, myKey, element }) => {
       <tr className=''>
         <td className='px-[20px]'>{element.name}</td>
         <td className='px-[20px]'>{numberOf}</td>
-        <td className='px-[20px]'>{amount} tFil</td>
+        <td className='px-[20px]'>{amount} MATIC</td>
         <td
           className='px-[20px] cursor-pointer '
         >

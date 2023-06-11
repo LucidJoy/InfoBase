@@ -121,7 +121,7 @@ const funding = () => {
 
         <div className='mt-[20px] mb-[20px] w-[400px] h-[125px] bg-[#4e4e50] rounded-[15px] flex items-center justify-center text-[60px]'>
           <p className='text-[#fff] font-semibold animate-pulse'>
-            {matchingValue} tFIL
+            {matchingValue} MATIC
           </p>
         </div>
 

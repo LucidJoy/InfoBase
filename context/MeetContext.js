@@ -14,11 +14,11 @@ import lighthouse, { upload } from "@lighthouse-web3/sdk";
 
 const CreateMeetContext = createContext({});
 
-const meetSciContractAddress = "0x332Ad58ccAF79b3681b600E81d1663103C64c29F";
+const meetSciContractAddress = "0x4e122EB60284E8D93d78E1b07A25860E1bf1109E";
 const nftContractAddress = "0xDF6E9c4d51BD389a9bde27e1c1F2773fFFEEBe3E";
 const accessListContractAddress = "0xd33D5E2155288d8aDB7492d8cEd3161998D1EA2b";
 const tokenDeployerAddress = "0xE8068C23B6604B650aA5EE6e229a0A85855C7A6E";
-const poolAddress = "0x332Ad58ccAF79b3681b600E81d1663103C64c29F";
+const poolAddress = "0x4e122EB60284E8D93d78E1b07A25860E1bf1109E";
 
 const meetSciAbi = meetSci.abi;
 const nftAbi = meetSciNFT.abi;
@@ -674,7 +674,7 @@ export const CreateMeetProvider = ({ children }) => {
         );
 
         const txRes = await meetSciContract.subscribe(scholar, researcher, {
-          gasLimit: 30000000,
+          gasLimit: 3000000,
         });
 
         await txRes.wait(1);
@@ -759,7 +759,7 @@ export const CreateMeetProvider = ({ children }) => {
 
         const txRes = await poolContract.depositMoneyToPool({
           value: amount,
-          gasLimit: 30000000,
+          gasLimit: 3000000,
         });
 
         await txRes.wait(1);
@@ -795,7 +795,7 @@ export const CreateMeetProvider = ({ children }) => {
 
         const txRes = await poolContract.fundResearcher(researcher, user, {
           value: amount,
-          gasLimit: 30000000,
+          gasLimit: 3000000,
         });
 
         await txRes.wait(1);
@@ -829,7 +829,7 @@ export const CreateMeetProvider = ({ children }) => {
         const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
 
         const txRes = await poolContract.disperseFunds(researchers, amounts, {
-          gasLimit: 30000000,
+          gasLimit: 3000000,
         });
 
         await txRes.wait(1);
@@ -893,20 +893,27 @@ export const CreateMeetProvider = ({ children }) => {
 
   const setDeadline = async (deadline) => {
     if (window.ethereum) {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+      try {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
 
-      const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
+        const poolContract = new ethers.Contract(poolAddress, poolAbi, signer);
 
-      const txRes = await poolContract.setDeadline(deadline, {
-        gasLimit: 300000000,
-      });
-      txRes.wait(4);
+        const txRes = await poolContract.setDeadline(deadline, {
+          gasLimit: 3000000,
+        });
 
-      console.log("Set deadline balance: ", txRes);
-      return txRes;
+        txRes.wait(1);
+
+        console.log("Set deadline balance: ", txRes);
+
+        return txRes;
+      } catch (error) {
+        alert("Deadline not set", error);
+        console.log(error);
+      }
     }
   };
 
