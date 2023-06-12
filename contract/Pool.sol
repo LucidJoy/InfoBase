@@ -46,7 +46,7 @@ contract InfoBasePool is AutomationCompatible, MeetSci {
     }
 
     function setDeadline(uint256 _deadline) public {
-        deadline = block.timestamp + _deadline;
+        deadline = _deadline;
     }
 
     function getNumberOfDonors(
